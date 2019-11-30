@@ -2,6 +2,7 @@ package network;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -44,23 +45,8 @@ public class Main extends Application {
 		
 		// contains the elements in the center of the page, load and create files
 		// make 2 boxes to separate the load and create functions
-		VBox centerBox = new VBox();
-		HBox createBox = new HBox();
-		HBox loadBox = new HBox();
-		centerBox.getChildren().add(createBox);
-		centerBox.getChildren().add(loadBox);
-		
-		Label createFile = new Label("Create file: ");
-		TextField createField = new TextField();
-		createBox.getChildren().add(createFile);
-		createBox.getChildren().add(createField);
-		
-		Label loadFile = new Label("Load file: ");
-		TextField loadField = new TextField();
-		loadBox.getChildren().add(loadFile);
-		loadBox.getChildren().add(loadField);
-		
-		root.setCenter(centerBox);
+		VBox createAndLoadNetwork = createAndLoadBox("Create network: ", "Load network: ");
+		root.setCenter(createAndLoadNetwork);
 		
 		// create exit option, should create a popup if exit is clicked
 		HBox exitBox = new HBox();
@@ -91,16 +77,46 @@ public class Main extends Application {
 	}
 	
 	private VBox setUpSignUpBox() {
+
 		return null;
 	}
 	
-	public VBox twoInputBox() {
+	// idk why we need two methods tbh
+	public VBox twoInputBox(String input1, String input2) {
+		VBox twoInputBox = setUpTwoInputBox(input1, input2);
+		return twoInputBox;
+	}
+	
+	private VBox createAndLoadBox(String input1, String input2) {
+		VBox twoInputBox = setUpTwoInputBox(input1, input2);
+		// gets the first HBox, then the textField from it
+		TextField txtField = (TextField)((HBox) twoInputBox.getChildren().get(0)).getChildren().get(1);
+		// TODO set actions for when correct input is entered
+		return twoInputBox;
+	}
+	
+	// sets up a versatile two input box, with a label followed by a textfield
+	private VBox setUpTwoInputBox(String input1, String input2) {
+		VBox twoInputBox = new VBox();
+		HBox box1 = new HBox();
+		HBox box2 = new HBox();
 		
-		return null;
-	}
-	
-	private VBox setUpTwoInputBox() {
-		return null;
+		// add HBoxes to VBox
+		twoInputBox.getChildren().add(box1);
+		twoInputBox.getChildren().add(box2);
+		
+		// add Labels and TextFields to HBoxes
+		Label inputLabel1 = new Label(input1);
+		TextField field1 = new TextField();
+		box1.getChildren().add(inputLabel1);
+		box1.getChildren().add(field1);
+		
+		Label inputLabel2 = new Label(input2);
+		TextField field2 = new TextField();
+		box2.getChildren().add(inputLabel2);
+		box2.getChildren().add(field2);
+		
+		return twoInputBox;
 	}
 	
 	public VBox centerBox() {
