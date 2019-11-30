@@ -3,11 +3,13 @@ package network;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -63,18 +65,92 @@ public class Main extends Application {
 		// create exit option, should create a popup if exit is clicked
 		HBox exitBox = new HBox();
 		Button exitButton = new Button("EXIT");
-		exitButton.setOnAction(e -> {
-			Alert alert = new Alert(AlertType.WARNING, "Save?");
-			alert.showAndWait().filter(response -> response == ButtonType.OK);
-			alert.show();
-		});
 		exitBox.getChildren().add(exitButton);
 		root.setBottom(exitBox);
 		
+		// FIXME Button creates a second popup when alert is interacted with/closed
+		exitButton.setOnAction(e -> {
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Save?");
+			alert.showAndWait().filter(resp -> resp == ButtonType.OK || resp == ButtonType.NO);
+			alert.show();
+		});
 		
+		// add components to the GUI
 		primaryStage.setScene(loadScene);
 		primaryStage.show();
 	}
+	
+	public SocialNetwork socialNetwork() {
+		
+		return null;
+	}
+	
+	public VBox signUpBox() {
+		
+		return null;
+	}
+	
+	private VBox setUpSignUpBox() {
+		return null;
+	}
+	
+	public VBox twoInputBox() {
+		
+		return null;
+	}
+	
+	private VBox setUpTwoInputBox() {
+		return null;
+	}
+	
+	public VBox centerBox() {
+		return null;
+	}
+	
+	private VBox setUpCenterBox() {
+		return null;
+	}
+	
+	public VBox bottomBox() {
+		return null;
+	}
+	
+	private VBox setUpBottomBox() {
+		return null;
+	}
+	
+	public MenuBar menuBar() {
+		return null;
+	}
+	
+	private MenuBar setUpMenuBar() {
+		return null;
+	}
+	
+	// not sure what +field : type is
+	
+	private void drawGraph(GraphicsContext gc) {
+		
+	}
+	
+	private void drawNode(GraphicsContext gc, String name, double x, double y) {
+		
+	}
+	
+	private void drawEdge(GraphicsContext gc, double x1, double y1, double x2, double y2) {
+		
+	}
+	
+	private String getNameFromCoordinates(double x, double y) {
+		return null;
+	}
+	
+	private void setSelectedUser(String name) {
+		
+	}
+	
+	
+	
 	
 	public static void main (String[] args) {
 		launch(args);
