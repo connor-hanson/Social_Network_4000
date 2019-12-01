@@ -45,7 +45,7 @@ public class Main extends Application {
 		
 		// contains the elements in the center of the page, load and create files
 		// make 2 boxes to separate the load and create functions
-		VBox createAndLoadNetwork = createAndLoadBox("Create network: ", "Load network: ");
+		VBox createAndLoadNetwork = twoInputBox("Create network: ", "Load network: ");
 		root.setCenter(createAndLoadNetwork);
 		
 		// create exit option, should create a popup if exit is clicked
@@ -87,15 +87,8 @@ public class Main extends Application {
 		return twoInputBox;
 	}
 	
-	private VBox createAndLoadBox(String input1, String input2) {
-		VBox twoInputBox = setUpTwoInputBox(input1, input2);
-		// gets the first HBox, then the textField from it
-		TextField txtField = (TextField)((HBox) twoInputBox.getChildren().get(0)).getChildren().get(1);
-		// TODO set actions for when correct input is entered
-		return twoInputBox;
-	}
-	
 	// sets up a versatile two input box, with a label followed by a textfield
+	// not sure why there are two methods tho someone lmk
 	private VBox setUpTwoInputBox(String input1, String input2) {
 		VBox twoInputBox = new VBox();
 		HBox box1 = new HBox();
@@ -108,13 +101,21 @@ public class Main extends Application {
 		// add Labels and TextFields to HBoxes
 		Label inputLabel1 = new Label(input1);
 		TextField field1 = new TextField();
+		Button button1 = new Button("Done");
 		box1.getChildren().add(inputLabel1);
 		box1.getChildren().add(field1);
+		box1.getChildren().add(button1);
 		
 		Label inputLabel2 = new Label(input2);
 		TextField field2 = new TextField();
+		Button button2 = new Button("Done");
 		box2.getChildren().add(inputLabel2);
 		box2.getChildren().add(field2);
+		box2.getChildren().add(button2);
+		
+		// create or load social network
+		button1.setOnAction(e -> socialNetwork());
+		button2.setOnAction(e -> socialNetwork());
 		
 		return twoInputBox;
 	}
