@@ -122,17 +122,79 @@ public class Main extends Application {
 		return twoInputBox;
 	}
 	
-	public boolean loginScreen() {
+	public void loginScreen() {
 		BorderPane pane = new BorderPane();
 		Scene loginScene = new Scene(pane, WINDOW_WIDTH, WINDOW_HEIGHT);
 		
 		VBox loginBox = twoInputBox("Username: ", "Password: ");
 		pane.setCenter(loginBox);
 		
+		loginBox.getChildren().add(new Button("Create Account"));
+		
+		HBox adminBox = new HBox();
+		adminBox.getChildren().add(new Label ("Admin"));
+		adminBox.getChildren().add(new TextField());
+		Button adminButt = new Button("Login");
+		adminBox.getChildren().add(adminButt);
+		loginBox.getChildren().add(adminBox);
+		
+		adminButt.setOnAction(e -> adminScreen());
+		
 		pane.setTop(menuBar());
 		
+		
+		
 		stage.setScene(loginScene);
-		return false;
+		
+	}
+	
+	private void adminScreen() {
+		BorderPane bp = new BorderPane();
+		Scene adminScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+		
+		bp.setTop(menuBar());
+		VBox options = new VBox();
+		bp.setCenter(options);
+		
+		HBox box1 = new HBox();
+		Button shortestFriendPath = new Button("Find Shortest Path");
+		box1.getChildren().add(shortestFriendPath);
+		VBox insideBox1 = new VBox();
+		TextField user1 = new TextField("Username 1");
+		insideBox1.getChildren().add(user1);
+		TextField user2 = new TextField("Username 2");
+		insideBox1.getChildren().add(user2);
+		box1.getChildren().add(insideBox1);
+		options.getChildren().add(box1);
+		
+		HBox box2 = new HBox();
+		Button listMutualFriends = new Button("Mutual Friends");
+		box2.getChildren().add(listMutualFriends);
+		VBox insideBox2 = new VBox();
+		TextField userUno = new TextField("Username 1");
+		insideBox2.getChildren().add(userUno);
+		TextField userDos = new TextField("Username 2");
+		insideBox2.getChildren().add(userDos);
+		box2.getChildren().add(insideBox2);
+		options.getChildren().add(box2);
+		
+		Button totalConnections = new Button("View Total Connections");
+		options.getChildren().add(totalConnections);
+		
+		HBox box3 = new HBox();
+		Button search = new Button("Search");
+		box3.getChildren().add(search);
+		TextField user = new TextField("Username");
+		box3.getChildren().add(user);
+		options.getChildren().add(box3);
+		
+		Button reset = new Button("Reset Network");
+		options.getChildren().add(reset);
+		
+		
+		
+		
+		stage.setScene(adminScreen);
 	}
 	
 	public VBox centerBox() {
