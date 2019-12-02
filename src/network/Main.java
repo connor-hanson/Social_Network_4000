@@ -18,14 +18,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * Class that creates GUI for aTeam Project, creating a Social Network
+ * @author Daniel de Monteiro, Connor Hanson, Mitchell Alley, George Khankeldian
+ *
+ */
 public class Main extends Application {
 	
-	private final int WINDOW_HEIGHT = 500;
-	private final int WINDOW_WIDTH = 500;
-	private final String APP_NAME = "Social Network 4000";
-	private Stage stage;
+	private final int WINDOW_HEIGHT = 500; //window height (pixels)
+	private final int WINDOW_WIDTH = 500; //window width(pixels)
+	private final String APP_NAME = "Social Network 4000"; //app title
+	private Stage stage; //default primary stage
 	
 
+	/**
+	 * Default start window when GUI is first run
+	 * Contains saving, creating a network, and loading a network
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		BorderPane root = new BorderPane();
@@ -64,6 +73,7 @@ public class Main extends Application {
 		});
 		
 		// add components to the GUI
+		primaryStage.setTitle(APP_NAME);
 		primaryStage.setScene(loadScene);
 		primaryStage.show();
 	}
@@ -129,7 +139,10 @@ public class Main extends Application {
 		VBox loginBox = twoInputBox("Username: ", "Password: ");
 		pane.setCenter(loginBox);
 		
-		loginBox.getChildren().add(new Button("Create Account"));
+		//Create account button, and set to userScreen
+		Button createAccount = new Button("Create Account");
+		createAccount.setOnAction(e -> userScreen("USER")); //FIXME so USER is actual username
+		loginBox.getChildren().add(createAccount);
 		
 		HBox adminBox = new HBox();
 		adminBox.getChildren().add(new Label ("Admin"));
@@ -195,6 +208,36 @@ public class Main extends Application {
 		
 		
 		stage.setScene(adminScreen);
+	}
+	
+	/**
+	 * Screen each user see's when they login (correctly)
+	 * @param username of the user
+	 */
+	private void userScreen(String username) {
+		//create label to display username at top
+		Label userLabel = new Label("User: " + username);
+		
+		//Create button to view friends
+		Button viewFriends = new Button("View Friends");
+		
+		//Adding elements to borderpane
+		BorderPane bp = new BorderPane();
+		bp.setTop(userLabel);
+		bp.setCenter(viewFriends);
+		//Create scene, and set scene
+		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+		stage.setScene(userScreen);
+		
+		//TODO Finish adding all other elements of user screen 
+	}
+	
+	/**
+	 * Private helper method to view friends of a certain user
+	 * @param username of the user who's friends will be shown
+	 */
+	private void viewFriendsList(String username) {
+		//TODO Implement how to view friend list
 	}
 	
 	public VBox centerBox() {
