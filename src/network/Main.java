@@ -10,6 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -22,12 +23,13 @@ public class Main extends Application {
 	private final int WINDOW_HEIGHT = 500;
 	private final int WINDOW_WIDTH = 500;
 	private final String APP_NAME = "Social Network 4000";
+	private Stage stage;
 	
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		BorderPane root = new BorderPane();
-		
+		this.stage = primaryStage;
 		// starts with the load/create file scene
 		// user can load, create, save, or exit program
 		Scene loadScene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -114,10 +116,23 @@ public class Main extends Application {
 		box2.getChildren().add(button2);
 		
 		// create or load social network
-		button1.setOnAction(e -> socialNetwork());
-		button2.setOnAction(e -> socialNetwork());
+		button1.setOnAction(e -> loginScreen());
+		button2.setOnAction(e -> loginScreen());
 		
 		return twoInputBox;
+	}
+	
+	public boolean loginScreen() {
+		BorderPane pane = new BorderPane();
+		Scene loginScene = new Scene(pane, WINDOW_WIDTH, WINDOW_HEIGHT);
+		
+		VBox loginBox = twoInputBox("Username: ", "Password: ");
+		pane.setCenter(loginBox);
+		
+		pane.setTop(menuBar());
+		
+		stage.setScene(loginScene);
+		return false;
 	}
 	
 	public VBox centerBox() {
@@ -136,12 +151,26 @@ public class Main extends Application {
 		return null;
 	}
 	
+	/*
+	 * Contains save, exit network, sign out
+	 */
 	public MenuBar menuBar() {
-		return null;
+		return setUpMenuBar();
 	}
 	
 	private MenuBar setUpMenuBar() {
-		return null;
+		MenuBar menu = new MenuBar();
+		
+		Menu save = new Menu("Save");
+		
+		Menu exit = new Menu("Exit");
+		exit.setOnAction(e -> Platform.exit());
+		
+		Menu signOut = new Menu("Sign out");
+		signOut.setOnAction(e -> loginScreen()); // test l8ter
+		
+		menu.getMenus().addAll(save, exit, signOut);
+		return menu;
 	}
 	
 	// not sure what +field : type is
