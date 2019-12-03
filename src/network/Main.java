@@ -1,5 +1,8 @@
 package network;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Stack;
 
@@ -21,6 +24,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -418,15 +422,17 @@ public class Main extends Application {
 		// save actions, need to implement the save feature
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction(e -> {
-			
+
 			// Just save, don't prompt or anything
-			
+
 		});
-		
+
 		MenuItem load = new MenuItem("Load");
 		load.setOnAction(e -> {
-			Alert al = new Alert(AlertType.NONE, "Load");
-
+			TextInputDialog loadFile = new TextInputDialog();
+			loadFile.setHeaderText("Type in file to load!");
+			Optional<String> input = loadFile.showAndWait();
+			
 			
 		});
 
@@ -443,13 +449,13 @@ public class Main extends Application {
 			} else if (result.get() == ButtonType.CANCEL) {
 				al.close();
 			}
-			
+
 		});
 
 		MenuItem signOut = new MenuItem("Sign out");
 		signOut.setOnAction(e -> loginScreen()); // test l8ter
 
-		menu.getItems().addAll(save, exit, signOut);
+		menu.getItems().addAll(save, load, exit, signOut);
 
 		Menu pages = new Menu("Pages");
 
