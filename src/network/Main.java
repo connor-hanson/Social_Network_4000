@@ -218,18 +218,83 @@ public class Main extends Application {
 		//create label to display username at top
 		Label userLabel = new Label("User: " + username);
 		
+		//Create VBox to store elements for userScreen
+		VBox vBox = new VBox();
+		
 		//Create button to view friends
 		Button viewFriends = new Button("View Friends");
+		viewFriends.setOnAction(e -> viewFriendsList(username)); //implement
+		vBox.getChildren().add(viewFriends);
+		
+		//Create text field to send friend request
+		HBox friendRequestBox = new HBox();
+		friendRequestBox.getChildren().add(new Label ("Send Friend Request: "));
+		TextField friendRequestText = new TextField();
+		friendRequestBox.getChildren().add(friendRequestText);
+		Button sendButton = new Button("Send");
+		friendRequestBox.getChildren().add(sendButton);
+		sendButton.setOnAction(e -> { //button action to retrieve inputed text
+			String text = friendRequestText.getText();
+			sendFriendRequest(username, text);
+			});
+		vBox.getChildren().add(friendRequestBox);
+		
+		//Create button to view friend requests
+		Button viewFriendRequests = new Button("View Friend Requests");
+		viewFriendRequests.setOnAction(e -> viewFriendRequests(username)); //implement
+		vBox.getChildren().add(viewFriendRequests);
+		
+		//Create text field to remove a friend
+		HBox removeBox = new HBox();
+		removeBox.getChildren().add(new Label ("Remove Friend: "));
+		TextField removeText = new TextField();
+		removeBox.getChildren().add(removeText);
+		Button removeButton = new Button("Remove");
+		removeBox.getChildren().add(removeButton);
+		removeButton.setOnAction(e -> { //button action to retrieve inputed text
+			String text = removeText.getText();
+			removeFriend(username, text);
+			});
+		vBox.getChildren().add(removeBox);
+		
+		//Create text field to get mutual friends
+		HBox mutualBox = new HBox();
+		mutualBox.getChildren().add(new Label ("Mutual Friends: "));
+		TextField mutualText = new TextField();
+		mutualBox.getChildren().add(mutualText);
+		Button mutualButton = new Button("View");
+		mutualBox.getChildren().add(mutualButton);
+		mutualButton.setOnAction(e -> { //button action to retrieve inputed text
+			String text = mutualText.getText();
+			mutualFriend(username, text);
+			});
+		vBox.getChildren().add(mutualBox);
+		
+		//Text field to search if a user exists or not
+		HBox serachBox = new HBox();
+		serachBox.getChildren().add(new Label ("Search: "));
+		TextField serachText = new TextField("Username");
+		serachBox.getChildren().add(serachText);
+		Button serachButton = new Button("View");
+		serachBox.getChildren().add(serachButton);
+		serachButton.setOnAction(e -> { //button action to retrieve inputed text
+			String text = serachText.getText();
+			search(text);
+			});
+		vBox.getChildren().add(serachBox);
+		
+		//Button to delete acount
+		Button deleteAccount = new Button("DELETE ACCOUNT");
+		deleteAccount.setOnAction(e -> deleteAccount(username)); //implement
+		vBox.getChildren().add(deleteAccount);
 		
 		//Adding elements to borderpane
 		BorderPane bp = new BorderPane();
 		bp.setTop(userLabel);
-		bp.setCenter(viewFriends);
+		bp.setCenter(vBox);
 		//Create scene, and set scene
 		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
 		stage.setScene(userScreen);
-		
-		//TODO Finish adding all other elements of user screen 
 	}
 	
 	/**
@@ -238,6 +303,58 @@ public class Main extends Application {
 	 */
 	private void viewFriendsList(String username) {
 		//TODO Implement how to view friend list
+	}
+	
+	/**
+	 * Private helper method to send friend request
+	 * @param username of the user who wants to send the friend request
+	 * @param friendName is the name of the user to send the request to
+	 */
+	private void sendFriendRequest(String username, String friendName) {
+		//TODO Implement how to send friend request
+	}
+	
+	/**
+	 * Private helper method to view friends requests of a user
+	 * @param username of the user who's friend requests will be shown
+	 */
+	private void viewFriendRequests(String username) {
+		//TODO Implement how to view friend requests
+	}
+	
+	/**
+	 * Private helper method to remove a friend
+	 * @param username is the user who's friend will be removed
+	 * @param friendName is the name of the friend to remove
+	 */
+	private void removeFriend(String username, String friendName) {
+		//TODO Implement how to remove a friend/
+	}
+	
+	/**
+	 * Private helper method to view mutual friends
+	 * @param username of the user
+	 * @param friendName of the user to see which mutual friends are shared
+	 */
+	private void mutualFriend(String username, String friendName) {
+		//TODO Implement viewing mutual friends
+	}
+	
+	/**
+	 * Private helper method to see if a user exists
+	 * @param username
+	 */
+	private boolean search(String username) {
+		//TODO Implement if a user exists or not in the network
+		return false;
+	}
+	
+	/**
+	 * Private helper method to delete an account
+	 * @param username of the account to delete
+	 */
+	private void deleteAccount(String username) {
+		//TODO Implement deleting an account
 	}
 	
 	public VBox centerBox() {
