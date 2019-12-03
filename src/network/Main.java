@@ -1,3 +1,32 @@
+/**
+ * Filename:   Main.java
+ * 
+ * Name: Daniel de Monteiro
+ * Email: demonteiro@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Name: Connor Hanson
+ * Email: cbhanson2@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Name: Mitchell Alley
+ * Email: mgalley@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 001
+ * 
+ * Name: George Khankeldian
+ * Email: khankeldian@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Due Date: December 3, 2019
+ * 
+ * Project Name: a2 ATEAM Project Milestone 2 GUI
+ * Description: Create a GUI to show the social network
+ */
+
 package network;
 
 import java.io.File;
@@ -23,8 +52,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -92,8 +124,10 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
-	// used this method so we can recall the first page, without needing try
-	// catch blocks everywhere
+	/**
+	 * used this method so we can recall the first page, without needing try
+	 * catch blocks everywhere
+	 */
 	private void firstPage() {
 		try {
 			start(stage);
@@ -117,14 +151,24 @@ public class Main extends Application {
 		return null;
 	}
 
-	// idk why we need two methods tbh
+	/**
+	 * Methdo to make a two input VBox
+	 * @param input1
+	 * @param input2
+	 * @return the Vbox
+	 */
 	public VBox twoInputBox(String input1, String input2) {
 		VBox twoInputBox = setUpTwoInputBox(input1, input2);
 		return twoInputBox;
 	}
 
-	// sets up a versatile two input box, with a label followed by a textfield
-	// not sure why there are two methods tho someone lmk
+	/**
+	 * Sets up a versatile two input box, with a label followed by a textfield
+	 * not sure why there are two methods tho someone lmk
+	 * @param input1
+	 * @param input2
+	 * @return
+	 */
 	private VBox setUpTwoInputBox(String input1, String input2) {
 		VBox twoInputBox = new VBox();
 
@@ -157,6 +201,9 @@ public class Main extends Application {
 		return twoInputBox;
 	}
 
+	/**
+	 * Method to view the login screen with all login screen elements
+	 */
 	public void loginScreen() {
 		BorderPane pane = new BorderPane();
 		Scene loginScene = new Scene(pane, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -185,6 +232,9 @@ public class Main extends Application {
 
 	}
 
+	/**
+	 * Methdo to view admin screen with all admin screen elements
+	 */
 	private void adminScreen() {
 		BorderPane bp = new BorderPane();
 		Scene adminScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -330,7 +380,36 @@ public class Main extends Application {
 	 * @param username of the user who's friends will be shown
 	 */
 	private void viewFriendsList(String username) {
-		// TODO Implement how to view friend list
+		// create label to display username at top
+		Label userLabel = new Label("Friends of: " + username);
+		
+		//Create a TableView to view friends
+		TableView friendView = new TableView();
+		TableColumn<String, Person> firstNameColumn = new TableColumn<>("First Name");
+		firstNameColumn.setCellValueFactory(new 
+				PropertyValueFactory<>("firstName"));
+		TableColumn<String, Person> lastNameColumn = new TableColumn<>("Last Name");
+		lastNameColumn.setCellValueFactory(new 
+				PropertyValueFactory<>("lastName"));
+		friendView.setPlaceholder(new Label("No rows to display"));
+		
+		friendView.getColumns().add(firstNameColumn);
+		friendView.getColumns().add(lastNameColumn);
+		
+		//Add an example friend to TableView
+		friendView.getItems().add(new Person("Daniel", "de Monteiro"));
+		friendView.getItems().add(new Person("Sicko", "Bamba"));
+		
+		// Adding elements to borderpane
+		BorderPane bp = new BorderPane();
+		bp.setTop(menuBar());
+		bp.setBottom(userLabel);
+		bp.setCenter(friendView);
+		// Create scene, and set scene
+		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+		stage.setScene(userScreen);
+		
+		// TODO Correctly implement how to view friend list
 	}
 
 	/**
@@ -349,7 +428,37 @@ public class Main extends Application {
 	 * @param username of the user who's friend requests will be shown
 	 */
 	private void viewFriendRequests(String username) {
-		// TODO Implement how to view friend requests
+		// create label to display username at top
+		Label userLabel = new Label("Friends Requests for: " + username);
+		
+		//Create a TableView to view friends
+		TableView friendRequestView = new TableView();
+		TableColumn<String, Person> firstNameColumn = new TableColumn<>("First Name");
+		firstNameColumn.setCellValueFactory(new 
+				PropertyValueFactory<>("firstName"));
+		TableColumn<String, Person> lastNameColumn = new TableColumn<>("Last Name");
+		lastNameColumn.setCellValueFactory(new 
+				PropertyValueFactory<>("lastName"));
+		friendRequestView.setPlaceholder(new Label("No rows to display"));
+		
+		friendRequestView.getColumns().add(firstNameColumn);
+		friendRequestView.getColumns().add(lastNameColumn);
+		
+		//Add an example friend to TableView
+		friendRequestView.getItems().add(new Person("Connor", "Hanson"));
+		friendRequestView.getItems().add(new Person("Mitch", "Alley"));
+		friendRequestView.getItems().add(new Person("George", "Khankeldian"));
+
+		// Adding elements to borderpane
+		BorderPane bp = new BorderPane();
+		bp.setTop(menuBar());
+		bp.setBottom(userLabel);
+		bp.setCenter(friendRequestView);
+		// Create scene, and set scene
+		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+		stage.setScene(userScreen);
+		
+		// TODO Correctly implement how to view friend requests
 	}
 
 	/**
@@ -414,6 +523,10 @@ public class Main extends Application {
 		return setUpMenuBar();
 	}
 
+	/**
+	 * Private helper method to save, exit network, and sign out for menuBar
+	 * @return the MenuBar with all its elements
+	 */
 	private MenuBar setUpMenuBar() {
 		MenuBar menuBar = new MenuBar();
 
