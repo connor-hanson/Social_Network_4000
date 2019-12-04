@@ -7,7 +7,7 @@ Team Members:
 1. Connor Hanson, LEC 001, and cbhanson2@wisc.edu
 2. Daniel de Monteiro, LEC 002, and demonteiro@wisc.edu
 3. George Khankeldian, lecture 002, and khankeldian@wisc.edu
-4. member name4, lecture, and email4@wisc.edu
+4. Mitchell Alley, LEC 001, and mgalley@wisc.edu
 
  
 
