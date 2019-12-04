@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: ATEAM 142
+Main-Class: application.Main
+
