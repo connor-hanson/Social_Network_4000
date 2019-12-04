@@ -1,4 +1,4 @@
-package network;
+package application;
 
 public interface GraphADT {
 

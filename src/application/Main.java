@@ -27,7 +27,7 @@
  * Description: Create a GUI to show the social network
  */
 
-package network;
+package application;
 
 import java.io.File;
 import java.io.FileNotFoundException;
