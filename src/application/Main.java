@@ -32,6 +32,7 @@ package application;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 
@@ -40,6 +41,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
@@ -75,6 +77,7 @@ public class Main extends Application {
 	private final int WINDOW_WIDTH = 500; // window width(pixels)
 	private final String APP_NAME = "Social Network 4000"; // app title
 	private Stage stage; // default primary stage
+	private SocialNetwork socialNetwork;
 
 	/**
 	 * Default start window when GUI is first run
@@ -93,7 +96,7 @@ public class Main extends Application {
 		VBox topBox = new VBox();
 		topBox.getChildren().add(menuBar());
 
-		Label title = new Label(APP_NAME); //creates new title
+		Label title = new Label(APP_NAME); // creates new title
 		topBox.getChildren().add(title);
 
 		root.setTop(topBox);
@@ -103,7 +106,16 @@ public class Main extends Application {
 		// make 2 boxes to separate the load and create functions
 		VBox createAndLoadNetwork = twoInputBox("Create network: ",
 				"Load network: ");
-		root.setCenter(createAndLoadNetwork);
+		root.setCenter(createAndLoadNetwork); // moved the buttons so that we
+												// can add load/save
+												// functionality to them
+		Button create = new Button("Create");
+		Button load = new Button("Load");
+		createAndLoadNetwork.getChildren().add(create);
+		createAndLoadNetwork.getChildren().add(load);
+		create.setOnAction(e -> loginScreen());
+
+		load.setOnAction(e -> socialNetwork().loadFromFile());
 
 		// create exit option, should create a popup if exit is clicked
 		HBox exitBox = new HBox();
@@ -136,9 +148,14 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Loads a new or existing social network
+	 * 
+	 * @return
+	 */
 	public SocialNetwork socialNetwork() {
 
-		return null;
+		return new SocialNetwork();
 	}
 
 	public VBox signUpBox() {
@@ -150,9 +167,11 @@ public class Main extends Application {
 
 		return null;
 	}
+	
 
 	/**
 	 * Methdo to make a two input VBox
+	 * 
 	 * @param input1
 	 * @param input2
 	 * @return the Vbox
@@ -162,9 +181,12 @@ public class Main extends Application {
 		return twoInputBox;
 	}
 
+	
+
 	/**
 	 * Sets up a versatile two input box, with a label followed by a textfield
 	 * not sure why there are two methods tho someone lmk
+	 * 
 	 * @param input1
 	 * @param input2
 	 * @return
@@ -182,21 +204,21 @@ public class Main extends Application {
 		// add Labels and TextFields to HBoxes
 		Label inputLabel1 = new Label(input1);
 		TextField field1 = new TextField();
-		Button button1 = new Button("Done");
+		// Button button1 = new Button("Done");
 		box1.getChildren().add(inputLabel1);
 		box1.getChildren().add(field1);
-		box1.getChildren().add(button1);
+		// box1.getChildren().add(button1);
 
 		Label inputLabel2 = new Label(input2);
 		TextField field2 = new TextField();
-		Button button2 = new Button("Done");
+		// Button button2 = new Button("Done");
 		box2.getChildren().add(inputLabel2);
 		box2.getChildren().add(field2);
-		box2.getChildren().add(button2);
+		// box2.getChildren().add(button2);
 
-		// create or load social network
-		button1.setOnAction(e -> loginScreen());
-		button2.setOnAction(e -> loginScreen());
+//		// create or load social network
+//		button1.setOnAction(e -> loginScreen());
+//		button2.setOnAction(e -> loginScreen());
 
 		return twoInputBox;
 	}
@@ -209,35 +231,48 @@ public class Main extends Application {
 		Scene loginScene = new Scene(pane, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		VBox loginBox = twoInputBox("Username: ", "Password: ");
+		Button logonButton = new Button("Login");
+		loginBox.getChildren().add(logonButton);
+		logonButton.setOnAction(e -> userScreen("USER"));
 		pane.setCenter(loginBox);
 
 		// Create account button, and set to userScreen
 		Button createAccount = new Button("Create Account");
-		//createAccount.setOnAction(e -> userScreen("USER")); // FIXME so USER is
-															// actual username
+		// createAccount.setOnAction(e -> userScreen("USER")); // FIXME so USER
+		// is
+		// actual username
 		createAccount.setOnAction(e -> {
 			TextInputDialog createDialog = new TextInputDialog();
 			createDialog.setHeaderText("Enter your name and password");
-			
-			GridPane dialogPane = new GridPane(); // pane to add the textfields to
+
+			GridPane dialogPane = new GridPane(); // pane to add the textfields
+													// to
 			VBox vbox = new VBox(20);
-			
-			TextField userName = new TextField(); // make textfields and add prompt text
+
+			TextField userName = new TextField(); // make textfields and add
+													// prompt text
 			userName.setPromptText("Enter your name here!");
 			TextField password = new TextField();
 			password.setPromptText("Enter your password here");
-			
+
 			vbox.getChildren().add(userName);
 			vbox.getChildren().add(password);
-			
+
 			dialogPane.getChildren().add(vbox);
 			createDialog.getDialogPane().setContent(dialogPane);
-						
-			Optional<String> result = createDialog.showAndWait(); 
+
+			createDialog.setOnCloseRequest(x -> {
+				socialNetwork.addUser(userName.getText()); // have to make sure
+															// social network is
+															// not null
+			});
+
+			Optional<String> result = createDialog.showAndWait();
 			// cant figure out how to get the text input
-			
+			// maybe move this stuff to signup box
+
 		});
-		
+
 		loginBox.getChildren().add(createAccount);
 
 		HBox adminBox = new HBox();
@@ -405,24 +440,26 @@ public class Main extends Application {
 	private void viewFriendsList(String username) {
 		// create label to display username at top
 		Label userLabel = new Label("Friends of: " + username);
-		
-		//Create a TableView to view friends
+
+		// Create a TableView to view friends
 		TableView friendView = new TableView();
-		TableColumn<String, Person> firstNameColumn = new TableColumn<>("First Name");
-		firstNameColumn.setCellValueFactory(new 
-				PropertyValueFactory<>("firstName"));
-		TableColumn<String, Person> lastNameColumn = new TableColumn<>("Last Name");
-		lastNameColumn.setCellValueFactory(new 
-				PropertyValueFactory<>("lastName"));
+		TableColumn<String, Person> firstNameColumn = new TableColumn<>(
+				"First Name");
+		firstNameColumn
+				.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+		TableColumn<String, Person> lastNameColumn = new TableColumn<>(
+				"Last Name");
+		lastNameColumn
+				.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 		friendView.setPlaceholder(new Label("No rows to display"));
-		
+
 		friendView.getColumns().add(firstNameColumn);
 		friendView.getColumns().add(lastNameColumn);
-		
-		//Add an example friend to TableView
+
+		// Add an example friend to TableView
 		friendView.getItems().add(new Person("Daniel", "de Monteiro"));
 		friendView.getItems().add(new Person("Sicko", "Bamba"));
-		
+
 		// Adding elements to borderpane
 		BorderPane bp = new BorderPane();
 		bp.setTop(menuBar());
@@ -431,7 +468,7 @@ public class Main extends Application {
 		// Create scene, and set scene
 		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
 		stage.setScene(userScreen);
-		
+
 		// TODO Correctly implement how to view friend list
 	}
 
@@ -453,21 +490,23 @@ public class Main extends Application {
 	private void viewFriendRequests(String username) {
 		// create label to display username at top
 		Label userLabel = new Label("Friends Requests for: " + username);
-		
-		//Create a TableView to view friends
+
+		// Create a TableView to view friends
 		TableView friendRequestView = new TableView();
-		TableColumn<String, Person> firstNameColumn = new TableColumn<>("First Name");
-		firstNameColumn.setCellValueFactory(new 
-				PropertyValueFactory<>("firstName"));
-		TableColumn<String, Person> lastNameColumn = new TableColumn<>("Last Name");
-		lastNameColumn.setCellValueFactory(new 
-				PropertyValueFactory<>("lastName"));
+		TableColumn<String, Person> firstNameColumn = new TableColumn<>(
+				"First Name");
+		firstNameColumn
+				.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+		TableColumn<String, Person> lastNameColumn = new TableColumn<>(
+				"Last Name");
+		lastNameColumn
+				.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 		friendRequestView.setPlaceholder(new Label("No rows to display"));
-		
+
 		friendRequestView.getColumns().add(firstNameColumn);
 		friendRequestView.getColumns().add(lastNameColumn);
-		
-		//Add an example friend to TableView
+
+		// Add an example friend to TableView
 		friendRequestView.getItems().add(new Person("Connor", "Hanson"));
 		friendRequestView.getItems().add(new Person("Mitch", "Alley"));
 		friendRequestView.getItems().add(new Person("George", "Khankeldian"));
@@ -480,7 +519,7 @@ public class Main extends Application {
 		// Create scene, and set scene
 		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
 		stage.setScene(userScreen);
-		
+
 		// TODO Correctly implement how to view friend requests
 	}
 
@@ -548,6 +587,7 @@ public class Main extends Application {
 
 	/**
 	 * Private helper method to save, exit network, and sign out for menuBar
+	 * 
 	 * @return the MenuBar with all its elements
 	 */
 	private MenuBar setUpMenuBar() {
@@ -568,8 +608,7 @@ public class Main extends Application {
 			TextInputDialog loadFile = new TextInputDialog();
 			loadFile.setHeaderText("Type in file to load!");
 			Optional<String> input = loadFile.showAndWait();
-			
-			
+
 		});
 
 		// exit button prompts user to save

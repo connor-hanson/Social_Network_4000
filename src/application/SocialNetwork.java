@@ -8,6 +8,7 @@ public class SocialNetwork implements SocialNetworkADT {
 	
 	private Graph graph;
 	private File log;
+	private String networkName;
 	
 	public SocialNetwork() {
 		graph = new Graph();
