@@ -17,6 +17,7 @@ public class Graph implements GraphADT {
 			// Case 1: They have the same name
 			if (p1.getFirstName().equals(p2.getFirstName())
 					&& p1.getLastName().equals(p2.getLastName())) {
+				System.out.println("Same name!");
 				return 0;
 			}
 
@@ -143,23 +144,20 @@ public class Graph implements GraphADT {
 	 */
 	@Override
 	public Person getPerson(String firstName, String lastName) {
-		Person findPerson = new Person(firstName, lastName);
-
-		if (!adjList.containsKey(findPerson)) {
-			return null; // person doesn't exist in the list
-		} else {
-			Set<Person> personSet = adjList.keySet();
-			for (Person p : personSet) {
-				if (NAME_COMPARATOR.compare(findPerson, p) == 0) {
-					return p; // return the person object with the same name
-				}
-			}
-
-			// if for some reason it was not found
-			return null;
-
+		if (firstName == null || lastName == null) {
+			throw new NullPointerException();
 		}
-		// TODO Auto-generated method stub
+		
+		Person findPerson = new Person(firstName, lastName);
+		
+		Set<Person> pplSet = adjList.keySet();
+		for (Person p : pplSet) {
+			if (NAME_COMPARATOR.compare(findPerson, p) == 0) {
+				return p; // return the person with the same name
+			}
+		}
+		
+		return null; // doesn't contain the person
 	}
 
 	/**

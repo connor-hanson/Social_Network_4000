@@ -37,6 +37,7 @@ package application;
 public class Person {
 	private String firstName = null;
 	private String lastName = null;
+	private String passWord = null;
 	
 	/**
 	 * Constructor to assign first and last names
@@ -47,6 +48,15 @@ public class Person {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
+	
+	public String getPassword() {
+		return this.passWord;
+	}
+	
+	public void setPassword(String password) {
+		this.passWord = password;
+	}
+	
 
 	public String getFirstName() {
 		return firstName;

@@ -1,44 +1,56 @@
 package application;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
 public class SocialNetwork implements SocialNetworkADT {
 	
 	private Graph graph;
+	private File log;
 	
 	public SocialNetwork() {
+		graph = new Graph();
+		log = new File("log.txt");
+	}
+	
+	private Person createPerson(String name) {
+		String[] fullName = name.split(" ");
+		return new Person(fullName[0], fullName[1]);
+	}
+
+	@Override
+	public boolean addFriends(String name1, String name2) {
+		Person p1 = createPerson(name1);
+		Person p2 = createPerson(name2);
 		
+		return graph.addEdge(p1, p2);
 	}
 
 	@Override
-	public boolean addFriends(String p1, String p2) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public boolean removeFriends(String name1, String name2) {
+		Person p1 = createPerson(name1);
+		Person p2 = createPerson(name2);
 
-	@Override
-	public boolean removeFriends(String p1, String p2) {
-		// TODO Auto-generated method stub
-		return false;
+		return graph.removeEdge(p1, p2);
 	}
 
 	@Override
 	public boolean addUser(String name) {
-		// TODO Auto-generated method stub
-		return false;
+		Person p = createPerson(name);
+		return graph.addNode(p);
 	}
 
 	@Override
 	public boolean removeUser(String name) {
-		// TODO Auto-generated method stub
-		return false;
+		Person p = createPerson(name);
+		return graph.removeNode(p);
 	}
 
 	@Override
 	public Set<Person> getFriends(String user) {
-		// TODO Auto-generated method stub
-		return null;
+		Person p = createPerson(user);
+		return graph.getNeighbors(p);
 	}
 
 	@Override

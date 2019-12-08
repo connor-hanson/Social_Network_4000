@@ -74,7 +74,6 @@ public class Main extends Application {
 	private final int WINDOW_WIDTH = 500; // window width(pixels)
 	private final String APP_NAME = "Social Network 4000"; // app title
 	private Stage stage; // default primary stage
-	private Stack<EventHandler<ActionEvent>> actionHistory;
 
 	/**
 	 * Default start window when GUI is first run
