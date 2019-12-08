@@ -93,7 +93,7 @@ public class Main extends Application {
 		VBox topBox = new VBox();
 		topBox.getChildren().add(menuBar());
 
-		Label title = new Label(APP_NAME);
+		Label title = new Label(APP_NAME); //creates new title
 		topBox.getChildren().add(title);
 
 		root.setTop(topBox);
