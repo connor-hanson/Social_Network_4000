@@ -425,24 +425,23 @@ public class Main extends Application {
 
 		// Create a TableView to view friends
 		TableView friendView = new TableView();
-		TableColumn<String, Person> firstNameColumn = new TableColumn<>(
+		TableColumn<String, Person> nameColumn = new TableColumn<>(
 				"First Name");
-		firstNameColumn
+		nameColumn
 				.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-		TableColumn<String, Person> lastNameColumn = new TableColumn<>(
-				"Last Name");
-		lastNameColumn
-				.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 		friendView.setPlaceholder(new Label("No rows to display"));
-
-		friendView.getColumns().add(firstNameColumn);
-		friendView.getColumns().add(lastNameColumn);
+		
+		//Add column to view friends of a certain friend
+		TableColumn view = new TableColumn("View Friends of");
+		
+		friendView.getColumns().add(nameColumn);
+		friendView.getColumns().add(view);
 
 		//Get Set of user friends from SocialNetwork
 		Set<Person> friends = this.socialNetwork.getFriends(username);
 		//iterate through set and add friends to TableView
 		for (Person p : friends) {
-			friendView.getItems().add(new Person(p.getFirstName(), p.getLastName()));
+			friendView.getItems().add(new Person(p.getName()));
 		}
 
 		// Adding elements to borderpane
@@ -492,25 +491,20 @@ public class Main extends Application {
 
 		// Create a TableView to view mutual friends
 		TableView friendView = new TableView();
-		TableColumn<String, Person> firstNameColumn = new TableColumn<>(
+		TableColumn<String, Person> nameColumn = new TableColumn<>(
 				"First Name");
-		firstNameColumn
+		nameColumn
 				.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-		TableColumn<String, Person> lastNameColumn = new TableColumn<>(
-				"Last Name");
-		lastNameColumn
-				.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 		friendView.setPlaceholder(new Label("No rows to display"));
 
-		friendView.getColumns().add(firstNameColumn);
-		friendView.getColumns().add(lastNameColumn);
+		friendView.getColumns().add(nameColumn);
 
 		//Get Set of mutual friends from SocialNetwork
 		Set<Person> friends = 
 				this.socialNetwork.getMutualFriends(username, friendName);
 		//iterate through set and add friends to TableView
 		for (Person p : friends) {
-			friendView.getItems().add(new Person(p.getFirstName(), p.getLastName()));
+			friendView.getItems().add(new Person(p.getName()));
 		}
 
 		// Adding elements to borderpane

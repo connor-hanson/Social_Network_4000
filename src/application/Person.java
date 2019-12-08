@@ -38,20 +38,27 @@ import java.util.List;
  *
  */
 public class Person {
-	//Store first name, last name, and password
-	private String firstName;
-	private String lastName;
+	//Store name and password
+	private String name;
 	private String passWord;
 	
 	/**
-	 * Constructor to assign first and last names, and initialize friends and
-	 * friend requests lists
+	 * Constructor to assign name
 	 * @param firstName is the first name of the person
 	 * @param lastName is the last name of the person
 	 */
-	public Person(String firstName, String lastName) {
-		this.firstName = firstName;
-		this.lastName = lastName;
+	public Person(String name) {
+		this.name = name;
+	}
+	
+	/**
+	 * Constructor to assign name and password
+	 * @param firstName is the first name of the person
+	 * @param lastName is the last name of the person
+	 */
+	public Person(String name, String password) {
+		this.name = name;
+		this.passWord = password;
 	}
 	
 	public String getPassword() {
@@ -61,21 +68,13 @@ public class Person {
 	public void setPassword(String password) {
 		this.passWord = password;
 	}
-	
-	public String getFirstName() {
-		return firstName;
+
+	public String getName() {
+		return name;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

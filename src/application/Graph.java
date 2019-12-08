@@ -15,20 +15,12 @@ public class Graph implements GraphADT {
 		@Override
 		public int compare(Person p1, Person p2) {
 			// Case 1: They have the same name
-			if (p1.getFirstName().equals(p2.getFirstName())
-					&& p1.getLastName().equals(p2.getLastName())) {
+			if (p1.getName().equals(p2.getName())) {
 				System.out.println("Same name!");
 				return 0;
 			}
-
-			// Case 2: same last name, sort by first name
-			else if (p1.getLastName().equals(p2.getLastName())) {
-				return p1.getFirstName().compareTo(p2.getFirstName());
-			}
-
-			// Case 3: different last name, sort by last name
 			else {
-				return p1.getLastName().compareTo(p2.getLastName());
+				return p1.getName().compareTo(p2.getName());
 			}
 
 		}
