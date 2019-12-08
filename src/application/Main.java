@@ -34,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Stack;
 
 import javafx.application.Application;
@@ -77,7 +78,7 @@ public class Main extends Application {
 	private final int WINDOW_WIDTH = 500; // window width(pixels)
 	private final String APP_NAME = "Social Network 4000"; // app title
 	private Stage stage; // default primary stage
-	private SocialNetwork socialNetwork;
+	private SocialNetwork socialNetwork; //create SocialNetwork to use
 
 	/**
 	 * Default start window when GUI is first run
@@ -357,23 +358,18 @@ public class Main extends Application {
 		viewFriends.setOnAction(e -> viewFriendsList(username)); // implement
 		vBox.getChildren().add(viewFriends);
 
-		// Create text field to send friend request
+		// Create text field to add a friend
 		HBox friendRequestBox = new HBox();
-		friendRequestBox.getChildren().add(new Label("Send Friend Request: "));
+		friendRequestBox.getChildren().add(new Label("Add Friend: "));
 		TextField friendRequestText = new TextField();
 		friendRequestBox.getChildren().add(friendRequestText);
 		Button sendButton = new Button("Send");
 		friendRequestBox.getChildren().add(sendButton);
 		sendButton.setOnAction(e -> { // button action to retrieve inputed text
 			String text = friendRequestText.getText();
-			sendFriendRequest(username, text);
+			addFriend(username, text);
 		});
 		vBox.getChildren().add(friendRequestBox);
-
-		// Create button to view friend requests
-		Button viewFriendRequests = new Button("View Friend Requests");
-		viewFriendRequests.setOnAction(e -> viewFriendRequests(username)); // implement
-		vBox.getChildren().add(viewFriendRequests);
 
 		// Create text field to remove a friend
 		HBox removeBox = new HBox();
@@ -402,20 +398,6 @@ public class Main extends Application {
 			mutualFriend(username, text);
 		});
 		vBox.getChildren().add(mutualBox);
-
-		// Text field to search if a user exists or not
-		HBox serachBox = new HBox();
-		serachBox.getChildren().add(new Label("Search: "));
-		TextField serachText = new TextField("Username");
-		serachBox.getChildren().add(serachText);
-		Button serachButton = new Button("View");
-		serachBox.getChildren().add(serachButton);
-		serachButton.setOnAction(e -> { // button action to retrieve inputed
-										// text
-			String text = serachText.getText();
-			search(text);
-		});
-		vBox.getChildren().add(serachBox);
 
 		// Button to delete acount
 		Button deleteAccount = new Button("DELETE ACCOUNT");
@@ -456,9 +438,12 @@ public class Main extends Application {
 		friendView.getColumns().add(firstNameColumn);
 		friendView.getColumns().add(lastNameColumn);
 
-		// Add an example friend to TableView
-		friendView.getItems().add(new Person("Daniel", "de Monteiro"));
-		friendView.getItems().add(new Person("Sicko", "Bamba"));
+		//Get Set of user friends from SocialNetwork
+		Set<Person> friends = this.socialNetwork.getFriends(username);
+		//iterate through set and add friends to TableView
+		for (Person p : friends) {
+			friendView.getItems().add(new Person(p.getFirstName(), p.getLastName()));
+		}
 
 		// Adding elements to borderpane
 		BorderPane bp = new BorderPane();
@@ -478,49 +463,9 @@ public class Main extends Application {
 	 * @param username   of the user who wants to send the friend request
 	 * @param friendName is the name of the user to send the request to
 	 */
-	private void sendFriendRequest(String username, String friendName) {
-		// TODO Implement how to send friend request
-	}
-
-	/**
-	 * Private helper method to view friends requests of a user
-	 * 
-	 * @param username of the user who's friend requests will be shown
-	 */
-	private void viewFriendRequests(String username) {
-		// create label to display username at top
-		Label userLabel = new Label("Friends Requests for: " + username);
-
-		// Create a TableView to view friends
-		TableView friendRequestView = new TableView();
-		TableColumn<String, Person> firstNameColumn = new TableColumn<>(
-				"First Name");
-		firstNameColumn
-				.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-		TableColumn<String, Person> lastNameColumn = new TableColumn<>(
-				"Last Name");
-		lastNameColumn
-				.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-		friendRequestView.setPlaceholder(new Label("No rows to display"));
-
-		friendRequestView.getColumns().add(firstNameColumn);
-		friendRequestView.getColumns().add(lastNameColumn);
-
-		// Add an example friend to TableView
-		friendRequestView.getItems().add(new Person("Connor", "Hanson"));
-		friendRequestView.getItems().add(new Person("Mitch", "Alley"));
-		friendRequestView.getItems().add(new Person("George", "Khankeldian"));
-
-		// Adding elements to borderpane
-		BorderPane bp = new BorderPane();
-		bp.setTop(menuBar());
-		bp.setBottom(userLabel);
-		bp.setCenter(friendRequestView);
-		// Create scene, and set scene
-		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
-		stage.setScene(userScreen);
-
-		// TODO Correctly implement how to view friend requests
+	private void addFriend(String username, String friendName) {
+		//create an edge between user and friend
+		this.socialNetwork.addFriends(username, friendName);
 	}
 
 	/**
@@ -530,7 +475,8 @@ public class Main extends Application {
 	 * @param friendName is the name of the friend to remove
 	 */
 	private void removeFriend(String username, String friendName) {
-		// TODO Implement how to remove a friend/
+		//remove edge from graph
+		this.socialNetwork.removeFriends(username, friendName);
 	}
 
 	/**
@@ -540,7 +486,41 @@ public class Main extends Application {
 	 * @param friendName of the user to see which mutual friends are shared
 	 */
 	private void mutualFriend(String username, String friendName) {
-		// TODO Implement viewing mutual friends
+		// create label to display username at top
+		Label userLabel = new Label("Mutual Friends of: " + username 
+				+ " and " + friendName);
+
+		// Create a TableView to view mutual friends
+		TableView friendView = new TableView();
+		TableColumn<String, Person> firstNameColumn = new TableColumn<>(
+				"First Name");
+		firstNameColumn
+				.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+		TableColumn<String, Person> lastNameColumn = new TableColumn<>(
+				"Last Name");
+		lastNameColumn
+				.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+		friendView.setPlaceholder(new Label("No rows to display"));
+
+		friendView.getColumns().add(firstNameColumn);
+		friendView.getColumns().add(lastNameColumn);
+
+		//Get Set of mutual friends from SocialNetwork
+		Set<Person> friends = 
+				this.socialNetwork.getMutualFriends(username, friendName);
+		//iterate through set and add friends to TableView
+		for (Person p : friends) {
+			friendView.getItems().add(new Person(p.getFirstName(), p.getLastName()));
+		}
+
+		// Adding elements to borderpane
+		BorderPane bp = new BorderPane();
+		bp.setTop(menuBar());
+		bp.setBottom(userLabel);
+		bp.setCenter(friendView);
+		// Create scene, and set scene
+		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+		stage.setScene(userScreen);
 	}
 
 	/**
@@ -559,7 +539,8 @@ public class Main extends Application {
 	 * @param username of the account to delete
 	 */
 	private void deleteAccount(String username) {
-		// TODO Implement deleting an account
+		//delete user from socialnetwork
+		this.socialNetwork.removeUser(username);
 	}
 
 	public VBox centerBox() {

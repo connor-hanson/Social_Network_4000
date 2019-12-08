@@ -29,18 +29,23 @@
 
 package application;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Class to store a person and their first/last name
  * @author Daniel de Monteiro, Connor Hanson, Mitchell Alley, George Khankeldian
  *
  */
 public class Person {
-	private String firstName = null;
-	private String lastName = null;
-	private String passWord = null;
+	//Store first name, last name, and password
+	private String firstName;
+	private String lastName;
+	private String passWord;
 	
 	/**
-	 * Constructor to assign first and last names
+	 * Constructor to assign first and last names, and initialize friends and
+	 * friend requests lists
 	 * @param firstName is the first name of the person
 	 * @param lastName is the last name of the person
 	 */
@@ -57,7 +62,6 @@ public class Person {
 		this.passWord = password;
 	}
 	
-
 	public String getFirstName() {
 		return firstName;
 	}
@@ -73,4 +77,5 @@ public class Person {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
 }
