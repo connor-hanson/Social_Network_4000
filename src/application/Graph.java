@@ -27,7 +27,7 @@ public class Graph implements GraphADT {
 	};
 
 	public Graph() {
-		adjList = new HashMap<>();
+		this.adjList = new HashMap<>();
 	}
 
 	/**
@@ -123,6 +123,11 @@ public class Graph implements GraphADT {
 	@Override
 	public Set<Person> getNeighbors(Person p) {
 		LinkedHashSet<Person> neighbors = new LinkedHashSet<>();
+		//return empty set if neighbors list is null
+		if (adjList.get(p) == null)
+			return neighbors;
+		
+		//else add neighbors to set and return set
 		neighbors.addAll(adjList.get(p));
 		return neighbors;
 	}

@@ -1,6 +1,7 @@
 package application;
 
 import java.io.File;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,8 +50,12 @@ public class SocialNetwork implements SocialNetworkADT {
 
 	@Override
 	public Set<Person> getFriends(String user) {
+		LinkedHashSet<Person> emptySet = new LinkedHashSet<>();
 		Person p = createPerson(user);
-		return graph.getNeighbors(p);
+		if (graph.getNeighbors(p) != null)
+			return graph.getNeighbors(p);
+		else
+			return emptySet;
 	}
 
 	@Override

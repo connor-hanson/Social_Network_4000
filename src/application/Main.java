@@ -200,11 +200,11 @@ public class Main extends Application {
 		VBox twoInputBox = new VBox();
 
 		HBox box1 = new HBox();
-		HBox box2 = new HBox();
+		//HBox box2 = new HBox();
 
 		// add HBoxes to VBox
 		twoInputBox.getChildren().add(box1);
-		twoInputBox.getChildren().add(box2);
+		//twoInputBox.getChildren().add(box2);
 
 		// add Labels and TextFields to HBoxes
 		Label inputLabel1 = new Label(input1);
@@ -217,8 +217,8 @@ public class Main extends Application {
 		Label inputLabel2 = new Label(input2);
 		TextField field2 = new TextField();
 		// Button button2 = new Button("Done");
-		box2.getChildren().add(inputLabel2);
-		box2.getChildren().add(field2);
+		//box2.getChildren().add(inputLabel2);
+		//box2.getChildren().add(field2);
 		// box2.getChildren().add(button2);
 
 //		// create or load social network
@@ -257,24 +257,28 @@ public class Main extends Application {
 			TextField userName = new TextField(); // make textfields and add
 													// prompt text
 			userName.setPromptText("Enter your name here!");
-			TextField password = new TextField();
-			password.setPromptText("Enter your password here");
+//			TextField password = new TextField();
+//			password.setPromptText("Enter your password here");
 
 			vbox.getChildren().add(userName);
-			vbox.getChildren().add(password);
+			//vbox.getChildren().add(password);
 
 			dialogPane.getChildren().add(vbox);
 			createDialog.getDialogPane().setContent(dialogPane);
 
-			createDialog.setOnCloseRequest(x -> {
-				socialNetwork.addUser(userName.getText()); // have to make sure
-															// social network is
-															// not null
-			});
+//			createDialog.setOnCloseRequest(x -> {
+//				socialNetwork.addUser(userName.getText()); // have to make sure
+//															// social network is
+//															// not null
+//			});
 
 			Optional<String> result = createDialog.showAndWait();
 			// cant figure out how to get the text input
 			// maybe move this stuff to signup box
+			result.ifPresent(name -> {
+				this.socialNetwork.addUser(name);
+				this.userScreen(name);
+			});
 
 		});
 
@@ -433,7 +437,7 @@ public class Main extends Application {
 				"First Name");
 		nameColumn
 				.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-		friendView.setPlaceholder(new Label("No rows to display"));
+		friendView.setPlaceholder(new Label("No friends to display"));
 		
 		//Add column to view friends of a certain friend
 		TableColumn view = new TableColumn("View Friends of");
