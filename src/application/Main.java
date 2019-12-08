@@ -58,6 +58,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -212,8 +213,31 @@ public class Main extends Application {
 
 		// Create account button, and set to userScreen
 		Button createAccount = new Button("Create Account");
-		createAccount.setOnAction(e -> userScreen("USER")); // FIXME so USER is
+		//createAccount.setOnAction(e -> userScreen("USER")); // FIXME so USER is
 															// actual username
+		createAccount.setOnAction(e -> {
+			TextInputDialog createDialog = new TextInputDialog();
+			createDialog.setHeaderText("Enter your name and password");
+			
+			GridPane dialogPane = new GridPane(); // pane to add the textfields to
+			VBox vbox = new VBox(20);
+			
+			TextField userName = new TextField(); // make textfields and add prompt text
+			userName.setPromptText("Enter your name here!");
+			TextField password = new TextField();
+			password.setPromptText("Enter your password here");
+			
+			vbox.getChildren().add(userName);
+			vbox.getChildren().add(password);
+			
+			dialogPane.getChildren().add(vbox);
+			createDialog.getDialogPane().setContent(dialogPane);
+						
+			Optional<String> result = createDialog.showAndWait(); 
+			// cant figure out how to get the text input
+			
+		});
+		
 		loginBox.getChildren().add(createAccount);
 
 		HBox adminBox = new HBox();
