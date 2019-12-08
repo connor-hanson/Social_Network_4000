@@ -114,7 +114,11 @@ public class Main extends Application {
 		Button load = new Button("Load");
 		createAndLoadNetwork.getChildren().add(create);
 		createAndLoadNetwork.getChildren().add(load);
-		create.setOnAction(e -> loginScreen());
+		//create a new social network
+		create.setOnAction(e -> {
+			this.socialNetwork = new SocialNetwork();
+			loginScreen();
+		});
 
 		load.setOnAction(e -> socialNetwork().loadFromFile());
 

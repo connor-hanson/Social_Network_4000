@@ -14,7 +14,7 @@ public interface GraphADT {
 	
 	public Set<Person> getNeighbors(Person p);
 	
-	public Person getPerson(String firstName, String lastName);
+	public Person getPerson(String name);
 	
 	public Set<Person> getAllNodes();
 

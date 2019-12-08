@@ -38,9 +38,8 @@ import java.util.List;
  *
  */
 public class Person {
-	//Store name and password
+	//Store name
 	private String name;
-	private String passWord;
 	
 	/**
 	 * Constructor to assign name
@@ -49,24 +48,6 @@ public class Person {
 	 */
 	public Person(String name) {
 		this.name = name;
-	}
-	
-	/**
-	 * Constructor to assign name and password
-	 * @param firstName is the first name of the person
-	 * @param lastName is the last name of the person
-	 */
-	public Person(String name, String password) {
-		this.name = name;
-		this.passWord = password;
-	}
-	
-	public String getPassword() {
-		return this.passWord;
-	}
-	
-	public void setPassword(String password) {
-		this.passWord = password;
 	}
 
 	public String getName() {

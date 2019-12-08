@@ -135,12 +135,12 @@ public class Graph implements GraphADT {
 	 * 
 	 */
 	@Override
-	public Person getPerson(String firstName, String lastName) {
-		if (firstName == null || lastName == null) {
+	public Person getPerson(String name) {
+		if (name == null) {
 			throw new NullPointerException();
 		}
 		
-		Person findPerson = new Person(firstName, lastName);
+		Person findPerson = new Person(name);
 		
 		Set<Person> pplSet = adjList.keySet();
 		for (Person p : pplSet) {

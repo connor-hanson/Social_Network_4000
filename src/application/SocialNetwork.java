@@ -16,8 +16,7 @@ public class SocialNetwork implements SocialNetworkADT {
 	}
 	
 	private Person createPerson(String name) {
-		String[] fullName = name.split(" ");
-		return new Person(fullName[0], fullName[1]);
+		return new Person(name);
 	}
 
 	@Override

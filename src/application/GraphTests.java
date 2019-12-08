@@ -26,7 +26,7 @@ class GraphTests {
 	@Test
 	void test000_add_5_nodes() {
 		for (int i = 0; i < 5; ++i) {
-			Person p = new Person("" + i, "" + i);
+			Person p = new Person("" + i);
 			if (!graph.addNode(p)) {
 				fail("Graph failed to add a person named " + i);
 			}
@@ -36,14 +36,14 @@ class GraphTests {
 	@Test
 	void test001_add_5_nodes_with_edges() {
 		for (int i = 0; i < 5; ++i) {
-			Person p = new Person("" + i, "" + i);
+			Person p = new Person("" + i);
 			graph.addNode(p);
 		}
 
 		for (int i = 0; i < 5; ++i) {
 			for (int j = 0; j < 5; ++j) {
-				Person p1 = new Person("" + i, "" + i);
-				Person p2 = new Person("" + j, "" + j);
+				Person p1 = new Person("" + i);
+				Person p2 = new Person("" + j);
 
 				if (!graph.addEdge(p1, p2)) {
 					fail("Failed to add an edge between person " + i + " and "
@@ -55,10 +55,10 @@ class GraphTests {
 
 	@Test
 	void test002_add_duplicate_nodes() {
-		Person p1 = new Person("Connor", "Hanson");
-		Person p2 = new Person("George", "Khankeldian");
-		Person p3 = new Person("Mitch", "Alley");
-		Person p4 = new Person("Daniel", "DeMonteiro");
+		Person p1 = new Person("Connor");
+		Person p2 = new Person("George");
+		Person p3 = new Person("Mitch");
+		Person p4 = new Person("Daniel");
 
 		// if any nodes were added incorrectly
 		if (!graph.addNode(p1) || !graph.addNode(p2) || !graph.addNode(p3)
@@ -74,10 +74,10 @@ class GraphTests {
 
 	@Test
 	void test003_add_duplicate_edges() {
-		Person p1 = new Person("Connor", "Hanson");
-		Person p2 = new Person("George", "Khankeldian");
-		Person p3 = new Person("Mitch", "Alley");
-		Person p4 = new Person("Daniel", "DeMonteiro");
+		Person p1 = new Person("Connor");
+		Person p2 = new Person("George");
+		Person p3 = new Person("Mitch");
+		Person p4 = new Person("Daniel");
 		
 		if (!graph.addEdge(p1, p2) || !graph.addEdge(p3, p4)) {
 			fail("Didnt add nodes or edge correctly");
@@ -90,10 +90,10 @@ class GraphTests {
 	
 	@Test 
 	void test004_getPerson() {
-		Person p1 = new Person("Connor", "Hanson");
-		Person p2 = new Person("George", "Khankeldian");
-		Person p3 = new Person("Mitch", "Alley");
-		Person p4 = new Person("Daniel", "DeMonteiro");
+		Person p1 = new Person("Connor");
+		Person p2 = new Person("George");
+		Person p3 = new Person("Mitch");
+		Person p4 = new Person("Daniel");
 		
 		if (!graph.addNode(p1) || !graph.addNode(p2) || !graph.addNode(p3)
 				|| !graph.addNode(p4)) {
@@ -101,17 +101,17 @@ class GraphTests {
 		}
 		
 		
-		if (!graph.getPerson("Connor", "Hanson").equals(p1)) {
+		if (!graph.getPerson("Connor").equals(p1)) {
 			fail("getPerson method working incorrectly");
 		}
 	}
 	
 	@Test
 	void test005_getAllNodes() {
-		Person p1 = new Person("Connor", "Hanson");
-		Person p2 = new Person("George", "Khankeldian");
-		Person p3 = new Person("Mitch", "Alley");
-		Person p4 = new Person("Daniel", "DeMonteiro");
+		Person p1 = new Person("Connor");
+		Person p2 = new Person("George");
+		Person p3 = new Person("Mitch");
+		Person p4 = new Person("Daniel");
 		
 		graph.addEdge(p1, p2);
 		graph.addEdge(p3, p4);
@@ -133,10 +133,10 @@ class GraphTests {
 	
 	@Test
 	void test006_getNeighbors() {
-		Person p1 = new Person("Connor", "Hanson");
-		Person p2 = new Person("George", "Khankeldian");
-		Person p3 = new Person("Mitch", "Alley");
-		Person p4 = new Person("Daniel", "DeMonteiro");
+		Person p1 = new Person("Connor");
+		Person p2 = new Person("George");
+		Person p3 = new Person("Mitch");
+		Person p4 = new Person("Daniel");
 		
 		graph.addEdge(p1, p2);
 		graph.addEdge(p1, p3);
