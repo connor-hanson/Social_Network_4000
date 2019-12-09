@@ -26,6 +26,10 @@ public class Graph implements GraphADT {
 		}
 	};
 
+	public HashMap<Person, List<Person>> getUsers(){
+		return adjList;
+	}
+	
 	public Graph() {
 		this.adjList = new HashMap<>();
 	}

@@ -1,8 +1,11 @@
 package application;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class SocialNetwork implements SocialNetworkADT {
@@ -16,42 +19,53 @@ public class SocialNetwork implements SocialNetworkADT {
 		log = new File("log.txt");
 	}
 	
-	private Person createPerson(String name) {
-		return new Person(name);
+	private Person getPerson(String name) {
+		HashMap<Person, List<Person>> list = graph.getUsers();
+		
+		Iterator it = list.entrySet().iterator();
+		Person one;
+		Person two;
+		while(it.hasNext()) {
+			Map.Entry mapElement = (Map.Entry)it.next();
+			if(((Person)mapElement.getKey()).getName().equals(name)) {
+				return (Person)(mapElement).getKey();
+			}
+		}
+		return null;
 	}
 
 	@Override
 	public boolean addFriends(String name1, String name2) {
-		Person p1 = createPerson(name1);
-		Person p2 = createPerson(name2);
+		Person p1 = getPerson(name1);
+		Person p2 = getPerson(name2);
 		
 		return graph.addEdge(p1, p2);
 	}
 
 	@Override
 	public boolean removeFriends(String name1, String name2) {
-		Person p1 = createPerson(name1);
-		Person p2 = createPerson(name2);
+		Person p1 = getPerson(name1);
+		Person p2 = getPerson(name2);
 
 		return graph.removeEdge(p1, p2);
 	}
 
 	@Override
 	public boolean addUser(String name) {
-		Person p = createPerson(name);
+		Person p = new Person(name);
 		return graph.addNode(p);
 	}
 
 	@Override
 	public boolean removeUser(String name) {
-		Person p = createPerson(name);
+		Person p = getPerson(name);
 		return graph.removeNode(p);
 	}
 
 	@Override
 	public Set<Person> getFriends(String user) {
 		LinkedHashSet<Person> emptySet = new LinkedHashSet<>();
-		Person p = createPerson(user);
+		Person p = getPerson(user);
 		if (graph.getNeighbors(p) != null)
 			return graph.getNeighbors(p);
 		else
