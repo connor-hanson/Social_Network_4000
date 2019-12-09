@@ -1,4 +1,4 @@
-README
+Connor HansonREADME
 
 Course: cs400
 Semester: Fall 2019

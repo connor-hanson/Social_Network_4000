@@ -1,15 +1,12 @@
 package application;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -43,6 +40,8 @@ public class SocialNetwork implements SocialNetworkADT {
 	}
 	
 	public boolean isAlreadyUser(String name) {
+		if (name == null)
+			return false;
 		if (graph.getPerson(name) == null) 
 			return false;		
 		else 
@@ -52,26 +51,13 @@ public class SocialNetwork implements SocialNetworkADT {
 
 	private Person getPerson(String name) {
 		return graph.getPerson(name);
-//		HashMap<Person, List<Person>> list = graph.getUsers();
-//
-//		Iterator<?> it = list.entrySet().iterator();
-//		// Person one; Seems like these were unused?
-//		// Person two;
-//		while (it.hasNext()) {
-//			Map.Entry mapElement = (Map.Entry) it.next(); // Whoever wrote this
-//															// needs to add type
-//															// arguments, idk
-//															// what is happening
-//															// here
-//			if (((Person) mapElement.getKey()).getName().equals(name)) {
-//				return (Person) (mapElement).getKey();
-//			}
-//		}
-//		return null;
+//		
 	}
 
 	@Override
 	public boolean addFriends(String name1, String name2) {
+		if (name1 == null || name2 == null)
+			return false;
 		Person p1 = getPerson(name1);
 		Person p2 = getPerson(name2);
 
@@ -83,6 +69,8 @@ public class SocialNetwork implements SocialNetworkADT {
 
 	@Override
 	public boolean removeFriends(String name1, String name2) {
+		if (name1 == null || name2 == null)
+			return false;
 		Person p1 = getPerson(name1);
 		Person p2 = getPerson(name2);
 
@@ -94,6 +82,8 @@ public class SocialNetwork implements SocialNetworkADT {
 
 	@Override
 	public boolean addUser(String name) {
+		if (name == null)
+			return false;
 		Person p = new Person(name);
 
 		fileWriter.println("-a " + name);
@@ -104,6 +94,8 @@ public class SocialNetwork implements SocialNetworkADT {
 
 	@Override
 	public boolean removeUser(String name) {
+		if (name == null)
+			return false;
 		Person p = getPerson(name);
 
 		fileWriter.println("-r " + name);
@@ -114,6 +106,8 @@ public class SocialNetwork implements SocialNetworkADT {
 
 	@Override
 	public Set<Person> getFriends(String user) {
+		if (user == null)
+			return null;
 		LinkedHashSet<Person> emptySet = new LinkedHashSet<>();
 		Person p = getPerson(user);
 		if (graph.getNeighbors(p) != null)
@@ -124,8 +118,19 @@ public class SocialNetwork implements SocialNetworkADT {
 
 	@Override
 	public Set<Person> getMutualFriends(String user1, String user2) {
-		// TODO Auto-generated method stub
-		return null;
+		if (user1 == null || user2 == null)
+			return null;
+		HashMap<Person, List<Person>> tmp = graph.getUsers();
+		List<Person> user1Friends = tmp.get(getPerson(user1));
+		List<Person> user2Friends = tmp.get(getPerson(user2));
+		HashSet<Person> returnVal = new HashSet<Person>();
+		
+		for (Person p : user1Friends) {
+			if (user2Friends.contains(p)) {
+				returnVal.add(p);
+			}
+		}
+		return returnVal;
 	}
 
 	@Override
