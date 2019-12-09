@@ -131,11 +131,25 @@ public class Main extends Application {
 		exitBox.getChildren().add(exitButton);
 		root.setBottom(exitBox);
 
+		// user presented with a yes/no choice to save. If yes -> socialNetwork
+		// must not be null and then the network is saved. Either way, the
+		// program shuts down
 		exitButton.setOnAction(e -> {
 			Alert alert = new Alert(AlertType.CONFIRMATION, "Save?");
-			alert.showAndWait().filter(
-					resp -> resp == ButtonType.OK || resp == ButtonType.NO);
-			// alert.show();
+			Optional<ButtonType> resp = alert.showAndWait();
+			if (resp.isPresent() && resp.get() == ButtonType.OK) {
+				try {
+					// Social network likely to be null on this scene. Need a
+					// safeguard
+					if (socialNetwork != null) {
+						socialNetwork.saveToFile();
+					}
+				} catch (IOException x) {
+					System.err.println("Error saving to file.");
+				}
+			}
+
+			Platform.exit();
 		});
 
 		// add components to the GUI
@@ -645,7 +659,11 @@ public class Main extends Application {
 		// save actions, need to implement the save feature
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction(e -> {
-
+			try {
+				socialNetwork.saveToFile();
+			} catch (IOException x) {
+				System.err.println("Error saving to file.");
+			}
 			// Just save, don't prompt or anything
 
 		});
@@ -654,7 +672,37 @@ public class Main extends Application {
 		load.setOnAction(e -> {
 			TextInputDialog loadFile = new TextInputDialog();
 			loadFile.setHeaderText("Type in file to load!");
-			Optional<String> input = loadFile.showAndWait();
+
+			// user input for the file to be loaded
+			Optional<String> resp = loadFile.showAndWait();
+
+			// ensure text input has at least one character
+			if (resp.get().length() == 0) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText(
+						"File to load must have at least one character");
+				al.showAndWait();
+			}
+
+			// append .txt to the end of string if the user didn't
+			else if (!resp.get().contains(".txt")) {
+				this.socialNetwork = new SocialNetwork(resp.get() + ".txt");
+				try {
+					socialNetwork.loadFromFile();
+				} catch (IOException x) {
+					System.err.println(x.getMessage());
+				}
+			}
+
+			// nothing needs to be done to modify the string
+			else {
+				this.socialNetwork = new SocialNetwork(resp.get());
+				try {
+					socialNetwork.loadFromFile();
+				} catch (IOException x) {
+					System.err.println(x.getMessage());
+				}
+			}
 
 		});
 
@@ -665,6 +713,7 @@ public class Main extends Application {
 					ButtonType.NO, ButtonType.CANCEL);
 			Optional<ButtonType> result = al.showAndWait();
 			if (result.get() == ButtonType.YES) {
+				save.fire(); // calls save.getOnAction
 				Platform.exit();
 			} else if (result.get() == ButtonType.NO) {
 				Platform.exit();

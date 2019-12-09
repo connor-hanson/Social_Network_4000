@@ -23,6 +23,9 @@ public class SocialNetwork implements SocialNetworkADT {
 	// TODO add every action to the log, which is saved when the save method is
 	// called
 
+	// Main class ensures that the name ends in .txt
+	// ex, if user inputs network, passed to this class as network.txt
+	// if user inputs network.txt, nothing is changed
 	public SocialNetwork(String networkName) {
 		graph = new Graph();
 		this.networkName = networkName;
