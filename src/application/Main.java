@@ -238,9 +238,15 @@ public class Main extends Application {
 				al.setContentText("Invalid input, must end in .txt");
 				al.showAndWait();
 			} else {
-				this.socialNetwork = new SocialNetwork(loadField.getText());
-				socialNetwork.loadFromFile();
-				loginScreen();
+				try {
+					this.socialNetwork = new SocialNetwork(loadField.getText());
+					socialNetwork.loadFromFile();
+					loginScreen();
+				} catch (IOException x) {
+					Alert al = new Alert(AlertType.WARNING);
+					al.setContentText(x.getMessage());
+					al.showAndWait();
+				}
 			}
 		});
 

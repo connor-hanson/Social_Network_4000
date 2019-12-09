@@ -17,7 +17,7 @@ class SocialExperiments {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		network = new SocialNetwork("Test");
+		//network = new SocialNetwork("Test");
 	}
 
 	@AfterEach
@@ -27,6 +27,7 @@ class SocialExperiments {
 
 	@Test
 	void test000_writeToLogAndSave() {
+		network = new SocialNetwork("Test");
 		
 		// perform each of the operations
 		for (int i = 0; i < 20; ++i) {
@@ -50,6 +51,17 @@ class SocialExperiments {
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			fail("Encountered IOException while saving to file");
+		}
+	}
+	
+	@Test
+	void test001_loadToLog() {
+		try {
+			network = new SocialNetwork("Test");
+			network.loadFromFile();
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+			fail("Encountered IOException while loading from file");
 		}
 	}
 

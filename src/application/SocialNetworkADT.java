@@ -23,7 +23,7 @@ public interface SocialNetworkADT {
 	
 	public Set<Graph> getConnectedComponents();
 	
-	public void loadFromFile();
+	public void loadFromFile() throws IOException;
 	
 	public void saveToFile() throws IOException;
 

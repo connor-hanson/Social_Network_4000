@@ -26,8 +26,9 @@ public class SocialNetwork implements SocialNetworkADT {
 	public SocialNetwork(String networkName) {
 		graph = new Graph();
 		this.networkName = networkName;
-		this.log = new File("LogFiles/log.txt"); // intentionally overwritten every time
-										// the program is run
+		this.log = new File("LogFiles/log.txt"); // intentionally overwritten
+													// every time
+		// the program is run
 
 		try {
 			this.fileWriter = new PrintWriter(log);
@@ -129,7 +130,44 @@ public class SocialNetwork implements SocialNetworkADT {
 	}
 
 	@Override
-	public void loadFromFile() {
+	public void loadFromFile() throws IOException {
+		File loadFile = new File("LogFiles/" + networkName);
+		//PrintWriter loadWriter = new PrintWriter(loadFile);
+		Scanner sc = new Scanner(loadFile);
+
+		while (sc.hasNext()) {
+			String line = sc.nextLine();
+			String[] command = line.split(" "); // splits into array based on
+												// how many spaces there are
+			
+			// a node command
+			if (command.length == 2) {
+				if (command[0].equals("-a")) {
+					addUser(command[1]);
+				} else if (command[0].equals("-r")) {
+					removeUser(command[1]);
+				} else {
+					System.err.println("Invalid command!");
+				}
+			} 
+			
+			// an edge command
+			else if (command.length == 3) {
+				if (command[0].equals("-a")) {
+					addFriends(command[1], command[2]);
+				} else if (command[0].equals("-r")) {
+					removeFriends(command[1], command[2]);
+				} else {
+					System.err.println("Invalid command!");
+				}
+			}
+			
+			else {
+				System.err.println("Invalid command length!");
+			}
+		}
+		
+		sc.close();
 
 		// TODO Auto-generated method stub
 
@@ -140,21 +178,22 @@ public class SocialNetwork implements SocialNetworkADT {
 	 */
 	@Override
 	public void saveToFile() throws IOException {
-		File saveFile = new File("LogFiles/" + networkName); // shouldn't have to append .txt
-												// since that is done in main
-			PrintWriter saveWriter = new PrintWriter(saveFile);
-			Scanner sc = new Scanner(log); // used to read through every line of
-											// the log file
-			while(sc.hasNext()) { // until there are no more lines
-				String line = sc.nextLine(); 
-				saveWriter.println(line);
-				saveWriter.flush();
-				System.out.println(line);
-			}
-			
-			sc.close();
-			saveWriter.close();
+		File saveFile = new File("LogFiles/" + networkName); // shouldn't have
+																// to append
+																// .txt
+		// since that is done in main
+		PrintWriter saveWriter = new PrintWriter(saveFile);
+		Scanner sc = new Scanner(log); // used to read through every line of
+										// the log file
+		while (sc.hasNext()) { // until there are no more lines
+			String line = sc.nextLine();
+			saveWriter.println(line);
+			saveWriter.flush();
+			System.out.println(line);
+		}
 
+		sc.close();
+		saveWriter.close();
 
 		// TODO Auto-generated method stub
 
