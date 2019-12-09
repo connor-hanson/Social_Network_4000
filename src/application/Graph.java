@@ -39,7 +39,7 @@ public class Graph implements GraphADT {
 	}
 
 	/**
-	 * Make a 1 directional edge, accepting the friend request will make it two
+	 * Make a 1 directional edge? accepting the friend request will make it two
 	 * way
 	 */
 	@Override

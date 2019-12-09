@@ -41,6 +41,14 @@ public class SocialNetwork implements SocialNetworkADT {
 		}
 
 	}
+	
+	public boolean isAlreadyUser(String name) {
+		if (graph.getPerson(name) == null) 
+			return false;		
+		else 
+			return true;
+		
+	}
 
 	private Person getPerson(String name) {
 		return graph.getPerson(name);

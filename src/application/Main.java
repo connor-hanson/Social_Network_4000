@@ -211,14 +211,13 @@ public class Main extends Application {
 		VBox container = new VBox();
 		HBox line1 = new HBox();
 		HBox line2 = new HBox();
-		container.getChildren().addAll(line1, line2);
 
 		// The whole create area
 		Label createLabel = new Label("Create network: ");
 		TextField createField = new TextField();
 		createField.setPromptText("Enter as .txt");
+
 		Button createButton = new Button("Create");
-		line1.getChildren().addAll(createLabel, createField, createButton);
 		createButton.setOnAction(e -> {
 			// invalid input, text length = 1
 			if (createField.getText().length() == 0) {
@@ -237,14 +236,14 @@ public class Main extends Application {
 						createField.getText() + ".txt");
 				loginScreen();
 			}
-		});
+		}); // end of create button functionality
 
 		// load field and associated actions
 		Label loadArea = new Label("Load network: ");
 		TextField loadField = new TextField();
 		loadField.setPromptText("MUST enter as a .txt file");
+
 		Button loadButton = new Button("Load");
-		line2.getChildren().addAll(loadArea, loadField, loadButton);
 		loadButton.setOnAction(e -> {
 			// if invalid input
 			if (!loadField.getText().contains(".txt")) {
@@ -262,7 +261,12 @@ public class Main extends Application {
 					al.showAndWait();
 				}
 			}
-		});
+		}); // end of load button functionality
+
+		// add all the fields to the HBoxes, then the HBoxes to the VBox
+		line1.getChildren().addAll(createLabel, createField, createButton);
+		line2.getChildren().addAll(loadArea, loadField, loadButton);
+		container.getChildren().addAll(line1, line2);
 
 		return container;
 
@@ -313,17 +317,31 @@ public class Main extends Application {
 		VBox loginBox = new VBox();
 		HBox line1 = new HBox();
 
+		// sets the fields
 		Label userNameLabel = new Label("UserName");
 		TextField userNameField = new TextField();
 		Button loginButton = new Button("Login");
 
 		// logs in if the user credential are right
 		loginButton.setOnAction(e -> {
+			// make sure user can't enter empty string as username
 			if (userNameField.getText().length() == 0) {
 				Alert al = new Alert(AlertType.WARNING);
 				al.setContentText("Username can't be empty");
 				al.showAndWait();
-			} else {
+			}
+
+			// now make sure that if they're using the login button, that they
+			// exist in the network. If they don't prompt them to create an
+			// account. Prevents null pointers in the user screen
+			else if (!socialNetwork.isAlreadyUser(userNameField.getText())) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText(userNameField.getText()
+						+ " is not registered in the Social_Network_4000. Register below.");
+				al.showAndWait();
+			}
+
+			else {
 				userScreen(userNameField.getText());
 			}
 
@@ -355,12 +373,12 @@ public class Main extends Application {
 
 		// Create account button, and set to userScreen
 		Button createAccount = new Button("Create Account");
-		// createAccount.setOnAction(e -> userScreen("USER")); // FIXME so USER
-		// is
-		// actual username
+
+		// add functionality to button
 		createAccount.setOnAction(e -> {
 			TextInputDialog createDialog = new TextInputDialog();
-			createDialog.setHeaderText("Enter your name and password");
+			createDialog.setHeaderText(
+					"Enter your name. Must have at least one character");
 
 			GridPane dialogPane = new GridPane(); // pane to add the textfields
 													// to
@@ -369,28 +387,35 @@ public class Main extends Application {
 			TextField userName = new TextField(); // make textfields and add
 													// prompt text
 			userName.setPromptText("Enter your name here!");
-//			TextField password = new TextField();
-//			password.setPromptText("Enter your password here");
 
 			vbox.getChildren().add(userName);
-			// vbox.getChildren().add(password);
 
 			dialogPane.getChildren().add(vbox);
 			createDialog.getDialogPane().setContent(dialogPane);
 
-//			createDialog.setOnCloseRequest(x -> {
-//				socialNetwork.addUser(userName.getText()); // have to make sure
-//															// social network is
-//															// not null
-//			});
-
+			// wait for user response and then input it
 			Optional<String> result = createDialog.showAndWait();
-			// cant figure out how to get the text input
-			// maybe move this stuff to signup box
-			result.ifPresent(name -> {
-				this.socialNetwork.addUser(name);
-				this.userScreen(name);
-			});
+
+			// add user to the network and bring them to the user page
+			if (result.isPresent() && userName.getText().length() != 0) {
+				// so that no duplicates occur
+				if (socialNetwork.isAlreadyUser(userName.getText())) {
+					Alert al = new Alert(AlertType.WARNING);
+					al.setContentText(
+							userName.getText() + " is already a user");
+					al.showAndWait();
+				}
+
+				socialNetwork.addUser(userName.getText());
+				userScreen(userName.getText());
+			}
+
+//			// cant figure out how to get the text input
+//			// maybe move this stuff to signup box
+//			result.ifPresent(name -> {
+//				this.socialNetwork.addUser(name);
+//				this.userScreen(name);
+//			});
 
 		});
 		// end of create account button actions
@@ -486,10 +511,20 @@ public class Main extends Application {
 		friendRequestBox.getChildren().add(friendRequestText);
 		Button sendButton = new Button("Send");
 		friendRequestBox.getChildren().add(sendButton);
+
+		// send request button functionality
 		sendButton.setOnAction(e -> { // button action to retrieve inputed text
 			String text = friendRequestText.getText();
 			addFriend(username, text);
+
+			// confirmation so user knows request sent
+			Alert al = new Alert(AlertType.CONFIRMATION);
+			al.setContentText("Friend request sent! You will be friends once "
+					+ text + " accepts your request.");
+			al.showAndWait();
+			friendRequestText.setText(""); // resets the send request box
 		});
+
 		vBox.getChildren().add(friendRequestBox);
 
 		// Create text field to remove a friend
@@ -513,11 +548,21 @@ public class Main extends Application {
 		mutualBox.getChildren().add(mutualText);
 		Button mutualButton = new Button("View");
 		mutualBox.getChildren().add(mutualButton);
+
 		mutualButton.setOnAction(e -> { // button action to retrieve inputed
 										// text
 			String text = mutualText.getText();
-			mutualFriend(username, text);
-		});
+
+			// ensures that user can't create null pointer here
+			if (text.length() == 0) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText("Must enter a name to view mutual friends");
+				al.showAndWait();
+			} else {
+				mutualFriend(username, text);
+			}
+		}); // end of mutual friends button functionality
+
 		vBox.getChildren().add(mutualBox);
 
 		// Button to delete acount
@@ -540,6 +585,7 @@ public class Main extends Application {
 	 * 
 	 * @param username of the user who's friends will be shown
 	 */
+	// TODO add type args to friendView, view
 	private void viewFriendsList(String username) {
 		// create label to display username at top
 		Label userLabel = new Label("Friends of: " + username);
@@ -561,6 +607,9 @@ public class Main extends Application {
 		Set<Person> friends = this.socialNetwork.getFriends(username);
 		// iterate through set and add friends to TableView
 		for (Person p : friends) {
+			if (p == null) {
+				System.out.println("p is null");
+			}
 			friendView.getItems().add(new Person(p.getName()));
 		}
 
