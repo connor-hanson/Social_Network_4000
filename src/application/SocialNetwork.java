@@ -26,7 +26,7 @@ public class SocialNetwork implements SocialNetworkADT {
 	public SocialNetwork(String networkName) {
 		graph = new Graph();
 		this.networkName = networkName;
-		this.log = new File("log.txt"); // intentionally overwritten every time
+		this.log = new File("LogFiles/log.txt"); // intentionally overwritten every time
 										// the program is run
 
 		try {
@@ -140,7 +140,7 @@ public class SocialNetwork implements SocialNetworkADT {
 	 */
 	@Override
 	public void saveToFile() throws IOException {
-		File saveFile = new File(networkName); // shouldn't have to append .txt
+		File saveFile = new File("LogFiles/" + networkName); // shouldn't have to append .txt
 												// since that is done in main
 			PrintWriter saveWriter = new PrintWriter(saveFile);
 			Scanner sc = new Scanner(log); // used to read through every line of
