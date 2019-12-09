@@ -308,6 +308,34 @@ public class Main extends Application {
 		return twoInputBox;
 	}
 
+	public VBox loginBox() {
+		// set up the containers for the login field
+		VBox loginBox = new VBox();
+		HBox line1 = new HBox();
+
+		Label userNameLabel = new Label("UserName");
+		TextField userNameField = new TextField();
+		Button loginButton = new Button("Login");
+
+		// logs in if the user credential are right
+		loginButton.setOnAction(e -> {
+			if (userNameField.getText().length() == 0) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText("Username can't be empty");
+				al.showAndWait();
+			} else {
+				userScreen(userNameField.getText());
+			}
+
+		});
+
+		// add all the elements to the HBox, then the HBox to VBox
+		line1.getChildren().addAll(userNameLabel, userNameField, loginButton);
+		loginBox.getChildren().add(line1);
+
+		return loginBox;
+	}
+
 	/**
 	 * Method to view the login screen with all login screen elements
 	 */
@@ -315,10 +343,14 @@ public class Main extends Application {
 		BorderPane pane = new BorderPane();
 		Scene loginScene = new Scene(pane, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-		VBox loginBox = twoInputBox("Username: ", "Password: ");
-		Button logonButton = new Button("Login");
-		loginBox.getChildren().add(logonButton);
-		logonButton.setOnAction(e -> userScreen("USER"));
+		// refactored all of the below into the loginBox() method, has the same
+		// functionality but easier to edit, - Connor
+//		VBox loginBox = twoInputBox("Username: ", "Password: ");
+//		Button logonButton = new Button("Login");
+//		loginBox.getChildren().add(logonButton);
+//		logonButton.setOnAction(e -> userScreen("USER"));
+
+		VBox loginBox = loginBox();
 		pane.setCenter(loginBox);
 
 		// Create account button, and set to userScreen
@@ -361,6 +393,7 @@ public class Main extends Application {
 			});
 
 		});
+		// end of create account button actions
 
 		loginBox.getChildren().add(createAccount);
 
