@@ -14,9 +14,10 @@ public class SocialNetwork implements SocialNetworkADT {
 	private File log;
 	private String networkName;
 	
-	public SocialNetwork() {
+	public SocialNetwork(String networkName) {
 		graph = new Graph();
 		log = new File("log.txt");
+		this.networkName = networkName;
 	}
 	
 	private Person getPerson(String name) {
@@ -92,6 +93,7 @@ public class SocialNetwork implements SocialNetworkADT {
 
 	@Override
 	public void loadFromFile() {
+		
 		// TODO Auto-generated method stub
 		
 	}

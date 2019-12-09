@@ -78,7 +78,7 @@ public class Main extends Application {
 	private final int WINDOW_WIDTH = 500; // window width(pixels)
 	private final String APP_NAME = "Social Network 4000"; // app title
 	private Stage stage; // default primary stage
-	private SocialNetwork socialNetwork; //create SocialNetwork to use
+	private SocialNetwork socialNetwork; // create SocialNetwork to use
 
 	/**
 	 * Default start window when GUI is first run
@@ -105,22 +105,25 @@ public class Main extends Application {
 		// contains the elements in the center of the page, load and create
 		// files
 		// make 2 boxes to separate the load and create functions
-		VBox createAndLoadNetwork = twoInputBox("Create network: ",
-				"Load network: ");
-		root.setCenter(createAndLoadNetwork); // moved the buttons so that we
-												// can add load/save
-												// functionality to them
-		Button create = new Button("Create");
-		Button load = new Button("Load");
-		createAndLoadNetwork.getChildren().add(create);
-		createAndLoadNetwork.getChildren().add(load);
-		//create a new social network
-		create.setOnAction(e -> {
-			this.socialNetwork = new SocialNetwork();
-			loginScreen();
-		});
+//		VBox createAndLoadNetwork = twoInputBox("Create network: ",
+//				"Load network: ");
+//		root.setCenter(createAndLoadNetwork); // moved the buttons so that we
+//												// can add load/save
+//												// functionality to them
+//		Button create = new Button("Create");
+//		Button load = new Button("Load");
+//		createAndLoadNetwork.getChildren().add(create);
+//		createAndLoadNetwork.getChildren().add(load);
+//		// create a new social network
+//		create.setOnAction(e -> {
+//			this.socialNetwork = new SocialNetwork(); // has to have a name
+//			loginScreen();
+//		});
+//
+//		load.setOnAction(e -> socialNetwork().loadFromFile());
 
-		load.setOnAction(e -> socialNetwork().loadFromFile());
+		VBox makeNetwork = createOrLoadNetwork();
+		root.setCenter(makeNetwork);
 
 		// create exit option, should create a popup if exit is clicked
 		HBox exitBox = new HBox();
@@ -160,7 +163,7 @@ public class Main extends Application {
 	 */
 	public SocialNetwork socialNetwork() {
 
-		return new SocialNetwork();
+		return null;
 	}
 
 	public VBox signUpBox() {
@@ -172,7 +175,6 @@ public class Main extends Application {
 
 		return null;
 	}
-	
 
 	/**
 	 * Methdo to make a two input VBox
@@ -186,7 +188,60 @@ public class Main extends Application {
 		return twoInputBox;
 	}
 
-	
+	private VBox createOrLoadNetwork() {
+		VBox container = new VBox();
+		HBox line1 = new HBox();
+		HBox line2 = new HBox();
+		container.getChildren().addAll(line1, line2);
+
+		// The whole create area
+		Label createLabel = new Label("Create network: ");
+		TextField createField = new TextField();
+		createField.setPromptText("Enter as .txt");
+		Button createButton = new Button("Create");
+		line1.getChildren().addAll(createLabel, createField, createButton);
+		createButton.setOnAction(e -> {
+			// invalid input, text length = 1
+			if (createField.getText().length() == 0) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText(
+						"File must have at least one character. Try again.");
+				al.showAndWait();
+			}
+
+			// valid input. First block appends .txt if user didn't type it in
+			else if (createField.getText().contains(".txt")) {
+				this.socialNetwork = new SocialNetwork(createField.getText());
+				loginScreen();
+			} else {
+				this.socialNetwork = new SocialNetwork(
+						createField.getText() + ".txt");
+				loginScreen();
+			}
+		});
+
+		// load field and associated actions
+		Label loadArea = new Label("Load network: ");
+		TextField loadField = new TextField();
+		loadField.setPromptText("MUST enter as a .txt file");
+		Button loadButton = new Button("Load");
+		line2.getChildren().addAll(loadArea, loadField, loadButton);
+		loadButton.setOnAction(e -> {
+			// if invalid input
+			if (!loadField.getText().contains(".txt")) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText("Invalid input, must end in .txt");
+				al.showAndWait();
+			} else {
+				this.socialNetwork = new SocialNetwork(loadField.getText());
+				socialNetwork.loadFromFile();
+				loginScreen();
+			}
+		});
+
+		return container;
+
+	}
 
 	/**
 	 * Sets up a versatile two input box, with a label followed by a textfield
@@ -200,11 +255,11 @@ public class Main extends Application {
 		VBox twoInputBox = new VBox();
 
 		HBox box1 = new HBox();
-		//HBox box2 = new HBox();
+		// HBox box2 = new HBox();
 
 		// add HBoxes to VBox
 		twoInputBox.getChildren().add(box1);
-		//twoInputBox.getChildren().add(box2);
+		// twoInputBox.getChildren().add(box2);
 
 		// add Labels and TextFields to HBoxes
 		Label inputLabel1 = new Label(input1);
@@ -217,8 +272,8 @@ public class Main extends Application {
 		Label inputLabel2 = new Label(input2);
 		TextField field2 = new TextField();
 		// Button button2 = new Button("Done");
-		//box2.getChildren().add(inputLabel2);
-		//box2.getChildren().add(field2);
+		// box2.getChildren().add(inputLabel2);
+		// box2.getChildren().add(field2);
 		// box2.getChildren().add(button2);
 
 //		// create or load social network
@@ -261,7 +316,7 @@ public class Main extends Application {
 //			password.setPromptText("Enter your password here");
 
 			vbox.getChildren().add(userName);
-			//vbox.getChildren().add(password);
+			// vbox.getChildren().add(password);
 
 			dialogPane.getChildren().add(vbox);
 			createDialog.getDialogPane().setContent(dialogPane);
@@ -435,19 +490,18 @@ public class Main extends Application {
 		TableView friendView = new TableView();
 		TableColumn<String, Person> nameColumn = new TableColumn<>(
 				"First Name");
-		nameColumn
-				.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+		nameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 		friendView.setPlaceholder(new Label("No friends to display"));
-		
-		//Add column to view friends of a certain friend
+
+		// Add column to view friends of a certain friend
 		TableColumn view = new TableColumn("View Friends of");
-		
+
 		friendView.getColumns().add(nameColumn);
 		friendView.getColumns().add(view);
 
-		//Get Set of user friends from SocialNetwork
+		// Get Set of user friends from SocialNetwork
 		Set<Person> friends = this.socialNetwork.getFriends(username);
-		//iterate through set and add friends to TableView
+		// iterate through set and add friends to TableView
 		for (Person p : friends) {
 			friendView.getItems().add(new Person(p.getName()));
 		}
@@ -471,7 +525,7 @@ public class Main extends Application {
 	 * @param friendName is the name of the user to send the request to
 	 */
 	private void addFriend(String username, String friendName) {
-		//create an edge between user and friend
+		// create an edge between user and friend
 		this.socialNetwork.addFriends(username, friendName);
 	}
 
@@ -482,7 +536,7 @@ public class Main extends Application {
 	 * @param friendName is the name of the friend to remove
 	 */
 	private void removeFriend(String username, String friendName) {
-		//remove edge from graph
+		// remove edge from graph
 		this.socialNetwork.removeFriends(username, friendName);
 	}
 
@@ -494,23 +548,22 @@ public class Main extends Application {
 	 */
 	private void mutualFriend(String username, String friendName) {
 		// create label to display username at top
-		Label userLabel = new Label("Mutual Friends of: " + username 
-				+ " and " + friendName);
+		Label userLabel = new Label(
+				"Mutual Friends of: " + username + " and " + friendName);
 
 		// Create a TableView to view mutual friends
 		TableView friendView = new TableView();
 		TableColumn<String, Person> nameColumn = new TableColumn<>(
 				"First Name");
-		nameColumn
-				.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+		nameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 		friendView.setPlaceholder(new Label("No rows to display"));
 
 		friendView.getColumns().add(nameColumn);
 
-		//Get Set of mutual friends from SocialNetwork
-		Set<Person> friends = 
-				this.socialNetwork.getMutualFriends(username, friendName);
-		//iterate through set and add friends to TableView
+		// Get Set of mutual friends from SocialNetwork
+		Set<Person> friends = this.socialNetwork.getMutualFriends(username,
+				friendName);
+		// iterate through set and add friends to TableView
 		for (Person p : friends) {
 			friendView.getItems().add(new Person(p.getName()));
 		}
@@ -541,7 +594,7 @@ public class Main extends Application {
 	 * @param username of the account to delete
 	 */
 	private void deleteAccount(String username) {
-		//delete user from socialnetwork
+		// delete user from socialnetwork
 		this.socialNetwork.removeUser(username);
 	}
 

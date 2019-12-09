@@ -12,7 +12,7 @@ class SocialExperiments {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		network = new SocialNetwork();
+		network = new SocialNetwork("Yeet");
 	}
 
 	@AfterEach
