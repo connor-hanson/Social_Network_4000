@@ -14,9 +14,13 @@ public class Graph implements GraphADT {
 	private static Comparator<Person> NAME_COMPARATOR = new Comparator<>() {
 		@Override
 		public int compare(Person p1, Person p2) {
+			if (p1 == null || p2 == null) {
+				return -1;
+			}
+			
 			// Case 1: They have the same name
 			if (p1.getName().equals(p2.getName())) {
-				System.out.println("Same name!");
+				//System.out.println("Same name!");
 				return 0;
 			}
 			else {
@@ -137,9 +141,6 @@ public class Graph implements GraphADT {
 	}
 
 	/**
-	 * NOTE: Changed parameters from String name to String firstName & String
-	 * lastName. Make a note to instructors when turning in or change the Person
-	 * class
 	 * 
 	 * 
 	 */

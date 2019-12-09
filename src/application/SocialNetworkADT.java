@@ -1,5 +1,7 @@
 package application;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +25,6 @@ public interface SocialNetworkADT {
 	
 	public void loadFromFile();
 	
-	public void saveToFile();
+	public void saveToFile() throws IOException;
 
 }

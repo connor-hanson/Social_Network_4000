@@ -188,6 +188,11 @@ public class Main extends Application {
 		return twoInputBox;
 	}
 
+	/**
+	 * method to create the load and create fields that the user is greeted with
+	 * 
+	 * @return
+	 */
 	private VBox createOrLoadNetwork() {
 		VBox container = new VBox();
 		HBox line1 = new HBox();
