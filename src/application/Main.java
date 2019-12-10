@@ -424,22 +424,30 @@ public class Main extends Application {
 		Button shortestFriendPath = new Button("Find Shortest Path");
 		box1.getChildren().add(shortestFriendPath);
 		VBox insideBox1 = new VBox();
-		TextField user1 = new TextField("Username 1");
+		TextField user1 = new TextField();
+		user1.setPromptText("Username 1");
 		insideBox1.getChildren().add(user1);
-		TextField user2 = new TextField("Username 2");
+		TextField user2 = new TextField();
+		user2.setPromptText("Username 2");
 		insideBox1.getChildren().add(user2);
 		box1.getChildren().add(insideBox1);
 		options.getChildren().add(box1);
 
+		//Hbox to create a button and texti field to view mutual friends
+		//between 2 users
 		HBox box2 = new HBox();
 		Button listMutualFriends = new Button("Mutual Friends");
 		box2.getChildren().add(listMutualFriends);
 		VBox insideBox2 = new VBox();
-		TextField userUno = new TextField("Username 1");
+		TextField userUno = new TextField();
+		userUno.setPromptText("Username 1");
 		insideBox2.getChildren().add(userUno);
-		TextField userDos = new TextField("Username 2");
+		TextField userDos = new TextField();
+		userDos.setPromptText("Username 2");
 		insideBox2.getChildren().add(userDos);
 		box2.getChildren().add(insideBox2);
+		listMutualFriends.setOnAction(e 
+				-> mutualFriend(userUno.getText(), userDos.getText()));
 		options.getChildren().add(box2);
 
 		//Button to view total # of users and friendships
@@ -587,13 +595,13 @@ public class Main extends Application {
 	 */
 	// TODO add type args to friendView, view
 	private void viewFriendsList(String username) {
-		// create label to display username at top
+		// create label to display username at bottom
 		Label userLabel = new Label("Friends of: " + username + 
 				"\nDouble Click Friend to View Their Friends");
 		
 		// Create a TableView to view friends
-		TableView friendView = new TableView();
-		TableColumn<String, Person> nameColumn = new TableColumn<>(
+		TableView<Person> friendView = new TableView<>();
+		TableColumn<Person, ?> nameColumn = new TableColumn<>(
 				"Name");
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
 		friendView.setPlaceholder(new Label("No friends to display"));
@@ -604,7 +612,6 @@ public class Main extends Application {
 		Set<Person> friends = this.socialNetwork.getFriends(username);
 		// iterate through set and add friends to TableView
 		for (Person p : friends) {
-			System.out.println(p.getName());
 			friendView.getItems().add(new Person(p.getName()));
 		}
 		
@@ -632,8 +639,6 @@ public class Main extends Application {
 		// Create scene, and set scene
 		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
 		stage.setScene(userScreen);
-
-		// TODO Correctly implement how to view friend list
 	}
 
 	/**
@@ -679,11 +684,11 @@ public class Main extends Application {
 				"Mutual Friends of: " + username + " and " + friendName);
 
 		// Create a TableView to view mutual friends
-		TableView friendView = new TableView();
-		TableColumn<String, Person> nameColumn = new TableColumn<>(
+		TableView<Person> friendView = new TableView();
+		TableColumn<Person, ?> nameColumn = new TableColumn<>(
 				"First Name");
-		nameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-		friendView.setPlaceholder(new Label("No rows to display"));
+		nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
+		friendView.setPlaceholder(new Label("No mutual friends to display"));
 
 		friendView.getColumns().add(nameColumn);
 
@@ -701,8 +706,8 @@ public class Main extends Application {
 		bp.setBottom(userLabel);
 		bp.setCenter(friendView);
 		// Create scene, and set scene
-		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
-		stage.setScene(userScreen);
+		Scene userScreen1 = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+		stage.setScene(userScreen1);
 	}
 
 	/**
