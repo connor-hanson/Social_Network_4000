@@ -141,7 +141,7 @@ public class SocialNetwork implements SocialNetworkADT {
 		return null;
 	}
 
-	private Graph depthFirstSearch(Person person, ArrayList<Person> unvisited) {
+	public Graph depthFirstSearch(Person person, ArrayList<Person> unvisited) {
 		HashMap<Person, List<Person>> list = graph.getUsers();
 		ArrayList<Person> visited = new ArrayList<Person>();
 		LinkedList<Person> queue = new LinkedList<Person>();
@@ -173,16 +173,19 @@ public class SocialNetwork implements SocialNetworkADT {
 	public Set<Graph> getConnectedComponents() {
 		ArrayList<Person> allPeople = new ArrayList<Person>();
 		Set<Person> list = graph.getUsers().keySet();
+		HashSet<Graph> returnVal = new HashSet<Graph>();
 		for (Person p : list) {
 			if (p != null)
 				allPeople.add(p);
 		}
-		int pass = 0;
-		depthFirstSearch(allPeople.get(pass), allPeople);
 		
-		return null;
+		
+		while((allPeople.size() != 0)) {
+			returnVal.add(depthFirstSearch(allPeople.get(0), allPeople));
+		}
+		return returnVal;
 	}
-
+	
 	@Override
 	public void loadFromFile() throws IOException {
 		File loadFile = new File("LogFiles/" + networkName);
