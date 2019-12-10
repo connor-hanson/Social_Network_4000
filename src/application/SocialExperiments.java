@@ -27,7 +27,7 @@ class SocialExperiments {
 
 	@Test
 	void test000_writeToLogAndSave() {
-		network = new SocialNetwork("Test");
+		network = new SocialNetwork("Test.txt");
 		
 		// perform each of the operations
 		for (int i = 0; i < 20; ++i) {
@@ -39,6 +39,10 @@ class SocialExperiments {
 		}
 		
 		for (int i = 0; i < 10; ++i) {
+			network.addFriends("" + 1, "" + i);
+		}
+		
+		for (int i = 5; i < 10; ++i) {
 			network.removeFriends("" + i, "" + i + 1);
 		}
 		
@@ -57,7 +61,7 @@ class SocialExperiments {
 	@Test
 	void test001_loadToLog() {
 		try {
-			network = new SocialNetwork("Test");
+			network = new SocialNetwork("Test.txt");
 			network.loadFromFile();
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
