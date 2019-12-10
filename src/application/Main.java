@@ -127,33 +127,6 @@ public class Main extends Application {
 		VBox makeNetwork = createOrLoadNetwork();
 		root.setCenter(makeNetwork);
 
-		// create exit option, should create a popup if exit is clicked
-		HBox exitBox = new HBox();
-		Button exitButton = new Button("EXIT");
-		exitBox.getChildren().add(exitButton);
-		root.setBottom(exitBox);
-
-		// user presented with a yes/no choice to save. If yes -> socialNetwork
-		// must not be null and then the network is saved. Either way, the
-		// program shuts down
-		exitButton.setOnAction(e -> {
-			Alert alert = new Alert(AlertType.CONFIRMATION, "Save?");
-			Optional<ButtonType> resp = alert.showAndWait();
-			if (resp.isPresent() && resp.get() == ButtonType.OK) {
-				try {
-					// Social network likely to be null on this scene. Need a
-					// safeguard
-					if (socialNetwork != null) {
-						socialNetwork.saveToFile();
-					}
-				} catch (IOException x) {
-					System.err.println("Error saving to file.");
-				}
-			}
-
-			Platform.exit();
-		});
-
 		// add components to the GUI
 		primaryStage.setTitle(APP_NAME);
 		primaryStage.setScene(loadScene);
