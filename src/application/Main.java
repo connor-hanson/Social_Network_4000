@@ -517,7 +517,9 @@ public class Main extends Application {
 		// send request button functionality
 		sendButton.setOnAction(e -> { // button action to retrieve inputed text
 			String text = friendRequestText.getText();
+			//adds friend to network
 			addFriend(username, text);
+			addFriend(text, username);
 
 			// confirmation so user knows request sent
 			if (this.socialNetwork.isAlreadyUser(text) == true) {
