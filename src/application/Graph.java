@@ -57,9 +57,10 @@ public class Graph implements GraphADT {
 		}
 		
 		adjList.get(p1).add(p2);
+		adjList.get(p2).add(p1);
 
 		// check to make sure it is added to the adjacency list
-		if (!adjList.get(p1).contains(p2)) {
+		if (!adjList.get(p1).contains(p2) || !adjList.get(p2).contains(p1)) {
 			return false;
 		}
 
