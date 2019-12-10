@@ -95,5 +95,12 @@ class SocialExperiments {
 					+ connectedComponents.size());
 		}
 	}
+	
+	@Test
+	void test003_Dijkstra() {
+		network = new SocialNetwork("Test3.txt");
+		
+		
+	}
 
 }
