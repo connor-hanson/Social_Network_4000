@@ -81,7 +81,7 @@ class SocialExperiments {
 
 		// 1 -> 5-9
 		for (int i = 5; i < 10; ++i) {
-			network.addFriends("" + 1, " + i");
+			network.addFriends("" + 1, "" + i);
 		}
 
 		network.addFriends("0", "2");
