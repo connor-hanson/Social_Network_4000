@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,6 +68,27 @@ class SocialExperiments {
 			System.err.println(e.getMessage());
 			fail("Encountered IOException while loading from file");
 		}
+	}
+	
+	@Test 
+	void test002_Connected_Components() {
+		network = new SocialNetwork("Test2.txt");
+		
+		// users 1-10
+		for (int i = 0; i < 10; ++i) {
+			network.addUser("" + i);
+		}
+		
+		//1 -> 5-9
+		for (int i = 5; i < 10; ++i) {
+			network.addFriends("" + 1, " + i");
+		}
+		
+		network.addFriends("0", "2");
+		network.addFriends("2", "3");
+		network.addFriends("3", "4");
+		
+		Set<Graph> connectedComponents = network.getConnectedComponents();
 	}
 
 }
