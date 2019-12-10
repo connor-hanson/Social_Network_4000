@@ -3,9 +3,11 @@ package application;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -139,9 +141,45 @@ public class SocialNetwork implements SocialNetworkADT {
 		return null;
 	}
 
+	private Graph depthFirstSearch(Person person, ArrayList<Person> unvisited) {
+		HashMap<Person, List<Person>> list = graph.getUsers();
+		ArrayList<Person> visited = new ArrayList<Person>();
+		LinkedList<Person> queue = new LinkedList<Person>();
+		
+		Graph returnVal = new Graph();
+		
+		//algorithm
+		visited.add(person);
+		unvisited.remove(person);
+		queue.add(person);
+		while(!queue.isEmpty()) {
+			Person p = queue.remove();
+			for (Person s : list.get(p)) {
+				if (unvisited.contains(s)) {
+					returnVal.addNode(s);
+					returnVal.addEdge(p, s);
+					visited.add(s);
+					unvisited.remove(s);
+					queue.add(s);
+				}
+			}
+		}
+		
+		
+		return returnVal;
+	}
+
 	@Override
 	public Set<Graph> getConnectedComponents() {
-		// TODO Auto-generated method stub
+		ArrayList<Person> allPeople = new ArrayList<Person>();
+		Set<Person> list = graph.getUsers().keySet();
+		for (Person p : list) {
+			if (p != null)
+				allPeople.add(p);
+		}
+		int pass = 0;
+		depthFirstSearch(allPeople.get(pass), allPeople);
+		
 		return null;
 	}
 
