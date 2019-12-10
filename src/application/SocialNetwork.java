@@ -141,7 +141,7 @@ public class SocialNetwork implements SocialNetworkADT {
 		return null;
 	}
 
-	private Graph depthFirstSearch(Person person, ArrayList<Person> unvisited) {
+	public Graph depthFirstSearch(Person person, ArrayList<Person> unvisited) {
 		HashMap<Person, List<Person>> list = graph.getUsers();
 		ArrayList<Person> visited = new ArrayList<Person>();
 		LinkedList<Person> queue = new LinkedList<Person>();
@@ -185,7 +185,7 @@ public class SocialNetwork implements SocialNetworkADT {
 		}
 		return returnVal;
 	}
-
+	
 	@Override
 	public void loadFromFile() throws IOException {
 		File loadFile = new File("LogFiles/" + networkName);
