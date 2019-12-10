@@ -518,10 +518,12 @@ public class Main extends Application {
 			addFriend(username, text);
 
 			// confirmation so user knows request sent
-			Alert al = new Alert(AlertType.CONFIRMATION);
-			al.setContentText("You are now friends with " + text);
-			al.showAndWait();
-			friendRequestText.setText(""); // resets the send request box
+			if (this.socialNetwork.isAlreadyUser(text) == true) {
+				Alert al = new Alert(AlertType.CONFIRMATION);
+				al.setContentText("You are now friends with " + text);
+				al.showAndWait();
+				friendRequestText.setText(""); // resets the send request box
+			}
 		});
 
 		vBox.getChildren().add(friendRequestBox);
@@ -593,7 +595,7 @@ public class Main extends Application {
 		TableView friendView = new TableView();
 		TableColumn<String, Person> nameColumn = new TableColumn<>(
 				"First Name");
-		nameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+		nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
 		friendView.setPlaceholder(new Label("No friends to display"));
 
 		// Add column to view friends of a certain friend
@@ -606,6 +608,7 @@ public class Main extends Application {
 		Set<Person> friends = this.socialNetwork.getFriends(username);
 		// iterate through set and add friends to TableView
 		for (Person p : friends) {
+			System.out.println(p.getName());
 			if (p == null) {
 				System.out.println("p is null");
 			}
@@ -631,6 +634,14 @@ public class Main extends Application {
 	 * @param friendName is the name of the user to send the request to
 	 */
 	private void addFriend(String username, String friendName) {
+		//makes sure friend exists in network
+		if (this.socialNetwork.isAlreadyUser(friendName) == false) {
+			Alert al = new Alert(AlertType.WARNING);
+			al.setContentText(
+					friendName + " is not a user in the network.");
+			al.showAndWait();
+			return;
+		}
 		// create an edge between user and friend
 		this.socialNetwork.addFriends(username, friendName);
 	}
