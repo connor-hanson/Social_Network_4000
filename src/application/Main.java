@@ -590,7 +590,7 @@ public class Main extends Application {
 	private void viewFriendsList(String username) {
 		// create label to display username at top
 		Label userLabel = new Label("Friends of: " + username);
-
+		
 		// Create a TableView to view friends
 		TableView friendView = new TableView();
 		TableColumn<String, Person> nameColumn = new TableColumn<>(
