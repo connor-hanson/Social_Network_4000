@@ -511,7 +511,7 @@ public class Main extends Application {
 		friendRequestBox.getChildren().add(new Label("Add Friend: "));
 		TextField friendRequestText = new TextField();
 		friendRequestBox.getChildren().add(friendRequestText);
-		Button sendButton = new Button("Send");
+		Button sendButton = new Button("Add");
 		friendRequestBox.getChildren().add(sendButton);
 
 		// send request button functionality
@@ -591,29 +591,23 @@ public class Main extends Application {
 	// TODO add type args to friendView, view
 	private void viewFriendsList(String username) {
 		// create label to display username at top
-		Label userLabel = new Label("Friends of: " + username);
+		Label userLabel = new Label("Friends of: " + username + 
+				"\nDouble Click Friend to View Their Friends");
 		
 		// Create a TableView to view friends
 		TableView friendView = new TableView();
 		TableColumn<String, Person> nameColumn = new TableColumn<>(
-				"First Name");
+				"Name");
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
 		friendView.setPlaceholder(new Label("No friends to display"));
 
-		// Add column to view friends of a certain friend
-		TableColumn view = new TableColumn("View Friends of");
-
 		friendView.getColumns().add(nameColumn);
-		friendView.getColumns().add(view);
 
 		// Get Set of user friends from SocialNetwork
 		Set<Person> friends = this.socialNetwork.getFriends(username);
 		// iterate through set and add friends to TableView
 		for (Person p : friends) {
 			System.out.println(p.getName());
-			if (p == null) {
-				System.out.println("p is null");
-			}
 			friendView.getItems().add(new Person(p.getName()));
 		}
 		
