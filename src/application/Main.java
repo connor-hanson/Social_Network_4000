@@ -56,10 +56,12 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -590,7 +592,7 @@ public class Main extends Application {
 	private void viewFriendsList(String username) {
 		// create label to display username at top
 		Label userLabel = new Label("Friends of: " + username);
-
+		
 		// Create a TableView to view friends
 		TableView friendView = new TableView();
 		TableColumn<String, Person> nameColumn = new TableColumn<>(
@@ -614,6 +616,22 @@ public class Main extends Application {
 			}
 			friendView.getItems().add(new Person(p.getName()));
 		}
+		
+		//Double clicking name will list friends of friend
+		friendView.setRowFactory(tv -> {
+		    TableRow row = new TableRow<>();
+		    row.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		        @Override
+		        public void handle(MouseEvent event) {
+		            if (event.getClickCount() == 2 && (!row.isEmpty())) {
+		            	Person friend = (Person) row.getItem();
+		            	String friendName = friend.getName();
+		                viewFriendsList(friendName);
+		            }
+		        }
+		    });
+		    return row;
+		});
 
 		// Adding elements to borderpane
 		BorderPane bp = new BorderPane();
@@ -752,6 +770,11 @@ public class Main extends Application {
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction(e -> {
 			try {
+				//Closes if there has been network created
+				if (this.socialNetwork == null) {
+					Platform.exit();
+					System.exit(0);
+				}
 				socialNetwork.saveToFile();
 			} catch (IOException x) {
 				System.err.println("Error saving to file.");
