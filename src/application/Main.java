@@ -642,6 +642,7 @@ public class Main extends Application {
 	private void removeFriend(String username, String friendName) {
 		// remove edge from graph
 		this.socialNetwork.removeFriends(username, friendName);
+		this.socialNetwork.removeFriends(friendName, username);
 	}
 
 	/**

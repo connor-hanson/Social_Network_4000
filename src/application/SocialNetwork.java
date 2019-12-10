@@ -173,17 +173,14 @@ public class SocialNetwork implements SocialNetworkADT {
 	public Set<Graph> getConnectedComponents() {
 		ArrayList<Person> allPeople = new ArrayList<Person>();
 		Set<Person> list = graph.getUsers().keySet();
-		HashSet<Graph> returnVal = new HashSet<Graph>();
 		for (Person p : list) {
 			if (p != null)
 				allPeople.add(p);
 		}
+		int pass = 0;
+		depthFirstSearch(allPeople.get(pass), allPeople);
 		
-		
-		while((allPeople.size() != 0)) {
-			returnVal.add(depthFirstSearch(allPeople.get(0), allPeople));
-		}
-		return returnVal;
+		return null;
 	}
 	
 	@Override
