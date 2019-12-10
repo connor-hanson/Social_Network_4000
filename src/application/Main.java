@@ -293,8 +293,9 @@ public class Main extends Application {
 		HBox line1 = new HBox();
 
 		// sets the fields
-		Label userNameLabel = new Label("UserName");
+		Label userNameLabel = new Label("Username ");
 		TextField userNameField = new TextField();
+		userNameField.setPromptText("Enter Username Here");
 		Button loginButton = new Button("Login");
 
 		// logs in if the user credential are right
@@ -397,13 +398,9 @@ public class Main extends Application {
 
 		loginBox.getChildren().add(createAccount);
 
-		HBox adminBox = new HBox();
-		adminBox.getChildren().add(new Label("Admin"));
-		adminBox.getChildren().add(new TextField());
-		Button adminButt = new Button("Login");
-		adminBox.getChildren().add(adminButt);
-		loginBox.getChildren().add(adminBox);
-
+		//Button to access admin control
+		Button adminButt = new Button("Admin Control");
+		loginBox.getChildren().add(adminButt);
 		adminButt.setOnAction(e -> adminScreen());
 
 		pane.setTop(menuBar());
@@ -413,7 +410,7 @@ public class Main extends Application {
 	}
 
 	/**
-	 * Methdo to view admin screen with all admin screen elements
+	 * Method to view admin screen with all admin screen elements
 	 */
 	private void adminScreen() {
 		BorderPane bp = new BorderPane();
@@ -445,7 +442,10 @@ public class Main extends Application {
 		box2.getChildren().add(insideBox2);
 		options.getChildren().add(box2);
 
-		Button totalConnections = new Button("View Total Connections");
+		//Button to view total # of users and friendships
+		Button totalConnections = new Button(
+				"View Total Number of Users and Friendships");
+		totalConnections.setOnAction(e -> viewTotal()); // implement
 		options.getChildren().add(totalConnections);
 
 		HBox box3 = new HBox();
@@ -459,6 +459,28 @@ public class Main extends Application {
 		options.getChildren().add(reset);
 
 		stage.setScene(adminScreen);
+	}
+	
+	/**
+	 * Private helper method to view total number of users, friends, and
+	 * connected components in social network
+	 */
+	private void viewTotal() {
+		//Vbox to display elements
+		VBox vBox = new VBox();
+		
+		//Label to display total number of users
+		Label totalUsers = new Label("Total Number of Users in Network: " 
+				+ this.socialNetwork.allUsers().size());
+		vBox.getChildren().add(totalUsers);
+		
+		// Adding elements to borderpane
+		BorderPane bp = new BorderPane();
+		bp.setTop(menuBar());
+		bp.setCenter(vBox);
+		// Create scene, and set scene
+		Scene viewTotalScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+		stage.setScene(viewTotalScreen);
 	}
 
 	/**

@@ -255,5 +255,13 @@ public class SocialNetwork implements SocialNetworkADT {
 		// TODO Auto-generated method stub
 
 	}
+	
+	/**
+	 * Method to return a set of all users in the network
+	 * @return set of all users in network
+	 */
+	public Set<Person> allUsers() {
+		return this.graph.getAllNodes();
+	}
 
 }
