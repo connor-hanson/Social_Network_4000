@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -135,10 +136,22 @@ public class SocialNetwork implements SocialNetworkADT {
 		return returnVal;
 	}
 
+	/**
+	 * Method to return a list of the shortest path between 2 nodes/
+	 */
 	@Override
 	public List<Person> getShortestPath(String user1, String user2) {
-		// TODO Auto-generated method stub
-		return null;
+		//get path of strings from graph
+		List<String> stringPath = this.graph.getShortestPath(user1, user2);
+		//List for Persons to be stored
+		List<Person> personPath = new LinkedList<>();
+		
+		//iterate througuh stringPath and add respective person to personPath
+		for (String s : stringPath) {
+			personPath.add(this.getPerson(s));
+		}
+		
+		return personPath;
 	}
 
 	public Graph depthFirstSearch(Person person, ArrayList<Person> unvisited) {
