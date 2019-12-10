@@ -519,8 +519,7 @@ public class Main extends Application {
 
 			// confirmation so user knows request sent
 			Alert al = new Alert(AlertType.CONFIRMATION);
-			al.setContentText("Friend request sent! You will be friends once "
-					+ text + " accepts your request.");
+			al.setContentText("You are now friends with " + text);
 			al.showAndWait();
 			friendRequestText.setText(""); // resets the send request box
 		});
