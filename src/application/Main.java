@@ -770,6 +770,11 @@ public class Main extends Application {
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction(e -> {
 			try {
+				//Closes if there has been network created
+				if (this.socialNetwork == null) {
+					Platform.exit();
+					System.exit(0);
+				}
 				socialNetwork.saveToFile();
 			} catch (IOException x) {
 				System.err.println("Error saving to file.");
