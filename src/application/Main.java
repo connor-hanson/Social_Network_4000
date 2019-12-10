@@ -735,7 +735,7 @@ public class Main extends Application {
 		MenuBar menuBar = new MenuBar();
 
 		Menu menu = new Menu("Options");
-
+		
 		// save actions, need to implement the save feature
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction(e -> {
