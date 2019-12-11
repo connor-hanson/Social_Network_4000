@@ -98,12 +98,6 @@ class SocialExperiments {
 	}
 	
 	@Test
-<<<<<<< HEAD
-	void test003_Dijkstra() {
-		network = new SocialNetwork("Test3.txt");
-		
-		
-=======
 	void test003_shortest_path() {
 		network = new SocialNetwork("Test2.txt");
 
@@ -120,7 +114,6 @@ class SocialExperiments {
 		
 		if (list.size() != 3)
 			fail("List size should be 3");
->>>>>>> 0214471344ca637812a2eb64a21c8cd0c0139b82
 	}
 
 }
