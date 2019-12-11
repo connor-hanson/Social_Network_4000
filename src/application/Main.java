@@ -86,6 +86,7 @@ public class Main extends Application {
 	private final String APP_NAME = "Social Network 4000"; // app title
 	private Stage stage; // default primary stage
 	private SocialNetwork socialNetwork; // create SocialNetwork to use
+	private int totalFriendships; //total number of friendships counter
 
 	/**
 	 * Default start window when GUI is first run
@@ -503,15 +504,21 @@ public class Main extends Application {
 		userGraph.setOnAction(e -> startGraph());
 		options.getChildren().add(userGraph);
 
-		// Label showing view total # of users and friendships
+		// Labels showing view total # of users, connected comp, and friendships
 		Label totalConnections = new Label(
 				"Total Number of Users: "
 						+ socialNetwork.allUsers().size());
 		options.getChildren().add(totalConnections);
+		
 		Label totalComponents = new Label(
 				"Total Number of Connected Components: "
 						+ socialNetwork.getConnectedComponents().size());
 		options.getChildren().add(totalComponents);
+		
+		Label totalFriends = new Label(
+				"Total Number of Friendships: "
+						+ this.totalFriendships);
+		options.getChildren().add(totalFriends);
 		
 		Button backButton = new Button("Back");
 		backButton.setOnAction(e -> loginScreen());
@@ -630,6 +637,7 @@ public class Main extends Application {
 			// adds friend to network
 			addFriend(username, text);
 			addFriend(text, username);
+			this.totalFriendships++; //increment number of friendships
 
 			// confirmation so user knows request sent
 			if (this.socialNetwork.isAlreadyUser(text) == true) {
@@ -803,6 +811,7 @@ public class Main extends Application {
 		// remove edge from graph
 		this.socialNetwork.removeFriends(username, friendName);
 		this.socialNetwork.removeFriends(friendName, username);
+		this.totalFriendships--; //decrement total number of friendships
 	}
 
 	/**
@@ -867,6 +876,8 @@ public class Main extends Application {
 	private void deleteAccount(String username) {
 		// delete user from socialnetwork
 		this.socialNetwork.removeUser(username);
+		//removes number of friends from total friendships
+		this.totalFriendships -= this.socialNetwork.getFriends(username).size();
 	}
 
 	public VBox centerBox() {
