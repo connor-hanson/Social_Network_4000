@@ -521,6 +521,14 @@ public class Main extends Application {
 //		options.getChildren().add(box3);
 
 		Button reset = new Button("Reset Network"); // add functionality
+		reset.setOnAction(e -> {
+			this.socialNetwork.resetNetwork();
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setContentText("Social Network has been reset, "
+					+ "all users and friend connections have been removed.");
+			alert.setHeaderText("Network Reset");
+			alert.showAndWait();
+		});
 		options.getChildren().add(reset);
 
 		stage.setScene(adminScreen);
@@ -641,6 +649,10 @@ public class Main extends Application {
 										// text
 			String text = removeText.getText();
 			removeFriend(username, text);
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setHeaderText("Friend removed");
+			alert.setContentText(text + " is no longer your friend.");
+			alert.showAndWait();
 		});
 		vBox.getChildren().add(removeBox);
 
