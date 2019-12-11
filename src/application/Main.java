@@ -641,6 +641,10 @@ public class Main extends Application {
 										// text
 			String text = removeText.getText();
 			removeFriend(username, text);
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setHeaderText("Friend removed");
+			alert.setContentText(text + " is no longer your friend.");
+			alert.showAndWait();
 		});
 		vBox.getChildren().add(removeBox);
 
