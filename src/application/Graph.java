@@ -1,3 +1,32 @@
+/**
+ * Filename:   Graph.java
+ * 
+ * Name: Daniel de Monteiro
+ * Email: demonteiro@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Name: Connor Hanson
+ * Email: cbhanson2@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Name: Mitchell Alley
+ * Email: mgalley@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 001
+ * 
+ * Name: George Khankeldian
+ * Email: khankeldian@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Due Date: December 3, 2019
+ * 
+ * Project Name: a2 ATEAM Project Milestone 2 GUI
+ * Description: Create a GUI to show the social network
+ */
+
 package application;
 
 import java.util.Comparator;
@@ -8,10 +37,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Class to create an undirected/unweighted graph for use in SocialNetwork
+ * @author Daniel de Monteiro, Connor Hanson, Mitchell Alley, George Khankeldian
+ *
+ */
 public class Graph implements GraphADT {
 
-	private HashMap<Person, List<Person>> adjList;
+	private HashMap<Person, List<Person>> adjList; //adjList to use for graph
+	
+	/**
+	 * Default constructor
+	 */
+	public Graph() {
+		this.adjList = new HashMap<>();
+	}
 
+	/**
+	 * Compares two nodes
+	 */
 	private static Comparator<Person> NAME_COMPARATOR = new Comparator<>() {
 		@Override
 		public int compare(Person p1, Person p2) {
@@ -31,17 +75,16 @@ public class Graph implements GraphADT {
 		}
 	};
 
+	/**
+	 * Get HashMap of all users/nodes
+	 * @return all users/nodes
+	 */
 	public HashMap<Person, List<Person>> getUsers(){
 		return adjList;
 	}
-	
-	public Graph() {
-		this.adjList = new HashMap<>();
-	}
 
 	/**
-	 * Make a 1 directional edge? accepting the friend request will make it two
-	 * way
+	 * Adds an edge between 2 nodes
 	 */
 	@Override
 	public boolean addEdge(Person p1, Person p2) {
@@ -69,7 +112,7 @@ public class Graph implements GraphADT {
 	}
 
 	/**
-	 * 
+	 * Removes edge between 2 nodes
 	 */
 	@Override
 	public boolean removeEdge(Person p1, Person p2) {
@@ -111,7 +154,7 @@ public class Graph implements GraphADT {
 	}
 
 	/**
-	 * 
+	 * Removes a node from the graph
 	 */
 	@Override
 	public boolean removeNode(Person p) {
@@ -128,7 +171,7 @@ public class Graph implements GraphADT {
 	}
 
 	/**
-	 * 
+	 * Get neighbors of a node
 	 */
 	@Override
 	public Set<Person> getNeighbors(Person p) {
@@ -143,8 +186,7 @@ public class Graph implements GraphADT {
 	}
 
 	/**
-	 * 
-	 * 
+	 * Get the Person(node) from a String name
 	 */
 	@Override
 	public Person getPerson(String name) {
@@ -165,7 +207,7 @@ public class Graph implements GraphADT {
 	}
 
 	/**
-	 * 
+	 * Get all nodes
 	 */
 	@Override
 	public Set<Person> getAllNodes() {
