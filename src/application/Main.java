@@ -128,7 +128,7 @@ public class Main extends Application {
 //		});
 //
 //		load.setOnAction(e -> socialNetwork().loadFromFile());
-
+		
 		VBox makeNetwork = createOrLoadNetwork();
 		root.setCenter(makeNetwork);
 
@@ -985,6 +985,25 @@ public class Main extends Application {
 
 		menu.getItems().addAll(save, load, exit, signOut);
 
+		//Help Box
+		Label help = new Label("Help/Info");
+		help.setOnMouseClicked(e -> {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setHeaderText("Help & Information");
+			alert.setContentText(
+					"Welcome to Social Network 4000."
+					+ "\n\nYou can either create a new network, or "
+					+ "load one from a file."
+					+ "\n\nThen, you can create a new account, or login to an "
+					+ "existing one."
+					+ "\n\nOnce logged in, you can add, remove, and view friends."
+					+ "\n\nThe admin control allows you to do things such as view"
+					+ " the entire network, mutual friends, and shortest friend path."
+					+ "\n\nEnjoy the network!");
+			alert.showAndWait();
+		});
+		Menu helpBar = new Menu("", help);
+		
 		Menu pages = new Menu("Pages");
 
 		MenuItem origPage = new MenuItem("Create/Load Screen");
@@ -1006,6 +1025,7 @@ public class Main extends Application {
 
 		menuBar.getMenus().add(menu);
 		menuBar.getMenus().add(pages);
+		menuBar.getMenus().add(helpBar);
 		return menuBar;
 	}
 
