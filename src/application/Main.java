@@ -499,16 +499,20 @@ public class Main extends Application {
 		});
 		options.getChildren().add(box2);
 
-		// Label showing view total # of users and friendships
-		Label totalConnections = new Label(
-				"Total Number of Users and Friendships: "
-						+ socialNetwork.allUsers().size());
-		options.getChildren().add(totalConnections);
-
 		Button userGraph = new Button("Visualize network");
 		userGraph.setOnAction(e -> startGraph());
 		options.getChildren().add(userGraph);
 
+		// Label showing view total # of users and friendships
+		Label totalConnections = new Label(
+				"Total Number of Users: "
+						+ socialNetwork.allUsers().size());
+		options.getChildren().add(totalConnections);
+		Label totalComponents = new Label(
+				"Total Number of Connected Components: "
+						+ socialNetwork.getConnectedComponents().size());
+		options.getChildren().add(totalComponents);
+		
 		Button backButton = new Button("Back");
 		backButton.setOnAction(e -> loginScreen());
 		bp.setBottom(backButton);
