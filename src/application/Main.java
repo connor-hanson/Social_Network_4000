@@ -32,6 +32,7 @@ package application;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -45,6 +46,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -65,7 +67,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -398,7 +402,7 @@ public class Main extends Application {
 
 		loginBox.getChildren().add(createAccount);
 
-		//Button to access admin control
+		// Button to access admin control
 		Button adminButt = new Button("Admin Control");
 		loginBox.getChildren().add(adminButt);
 		adminButt.setOnAction(e -> adminScreen());
@@ -433,8 +437,8 @@ public class Main extends Application {
 		box1.getChildren().add(insideBox1);
 		options.getChildren().add(box1);
 
-		//Hbox to create a button and texti field to view mutual friends
-		//between 2 users
+		// Hbox to create a button and texti field to view mutual friends
+		// between 2 users
 		HBox box2 = new HBox();
 		Button listMutualFriends = new Button("Mutual Friends");
 		box2.getChildren().add(listMutualFriends);
@@ -446,15 +450,19 @@ public class Main extends Application {
 		userDos.setPromptText("Username 2");
 		insideBox2.getChildren().add(userDos);
 		box2.getChildren().add(insideBox2);
-		listMutualFriends.setOnAction(e 
-				-> mutualFriend(userUno.getText(), userDos.getText()));
+		listMutualFriends.setOnAction(
+				e -> mutualFriend(userUno.getText(), userDos.getText()));
 		options.getChildren().add(box2);
 
-		//Button to view total # of users and friendships
+		// Button to view total # of users and friendships
 		Button totalConnections = new Button(
 				"View Total Number of Users and Friendships");
 		totalConnections.setOnAction(e -> viewTotal()); // implement
 		options.getChildren().add(totalConnections);
+
+		Button userGraph = new Button("Visualize network");
+		userGraph.setOnAction(e -> startGraph());
+		options.getChildren().add(userGraph);
 
 		HBox box3 = new HBox();
 		Button search = new Button("Search");
@@ -463,25 +471,25 @@ public class Main extends Application {
 		box3.getChildren().add(user);
 		options.getChildren().add(box3);
 
-		Button reset = new Button("Reset Network");
+		Button reset = new Button("Reset Network"); // add functionality
 		options.getChildren().add(reset);
 
 		stage.setScene(adminScreen);
 	}
-	
+
 	/**
 	 * Private helper method to view total number of users, friends, and
 	 * connected components in social network
 	 */
 	private void viewTotal() {
-		//Vbox to display elements
+		// Vbox to display elements
 		VBox vBox = new VBox();
-		
-		//Label to display total number of users
-		Label totalUsers = new Label("Total Number of Users in Network: " 
+
+		// Label to display total number of users
+		Label totalUsers = new Label("Total Number of Users in Network: "
 				+ this.socialNetwork.allUsers().size());
 		vBox.getChildren().add(totalUsers);
-		
+
 		// Adding elements to borderpane
 		BorderPane bp = new BorderPane();
 		bp.setTop(menuBar());
@@ -520,7 +528,7 @@ public class Main extends Application {
 		// send request button functionality
 		sendButton.setOnAction(e -> { // button action to retrieve inputed text
 			String text = friendRequestText.getText();
-			//adds friend to network
+			// adds friend to network
 			addFriend(username, text);
 			addFriend(text, username);
 
@@ -596,13 +604,12 @@ public class Main extends Application {
 	// TODO add type args to friendView, view
 	private void viewFriendsList(String username) {
 		// create label to display username at bottom
-		Label userLabel = new Label("Friends of: " + username + 
-				"\nDouble Click Friend to View Their Friends");
-		
+		Label userLabel = new Label("Friends of: " + username
+				+ "\nDouble Click Friend to View Their Friends");
+
 		// Create a TableView to view friends
 		TableView<Person> friendView = new TableView<>();
-		TableColumn<Person, ?> nameColumn = new TableColumn<>(
-				"Name");
+		TableColumn<Person, ?> nameColumn = new TableColumn<>("Name");
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
 		friendView.setPlaceholder(new Label("No friends to display"));
 
@@ -614,21 +621,21 @@ public class Main extends Application {
 		for (Person p : friends) {
 			friendView.getItems().add(new Person(p.getName()));
 		}
-		
-		//Double clicking name will list friends of friend
+
+		// Double clicking name will list friends of friend
 		friendView.setRowFactory(tv -> {
-		    TableRow row = new TableRow<>();
-		    row.setOnMouseClicked(new EventHandler<MouseEvent>() {
-		        @Override
-		        public void handle(MouseEvent event) {
-		            if (event.getClickCount() == 2 && (!row.isEmpty())) {
-		            	Person friend = (Person) row.getItem();
-		            	String friendName = friend.getName();
-		                viewFriendsList(friendName);
-		            }
-		        }
-		    });
-		    return row;
+			TableRow row = new TableRow<>();
+			row.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent event) {
+					if (event.getClickCount() == 2 && (!row.isEmpty())) {
+						Person friend = (Person) row.getItem();
+						String friendName = friend.getName();
+						viewFriendsList(friendName);
+					}
+				}
+			});
+			return row;
 		});
 
 		// Adding elements to borderpane
@@ -648,11 +655,10 @@ public class Main extends Application {
 	 * @param friendName is the name of the user to send the request to
 	 */
 	private void addFriend(String username, String friendName) {
-		//makes sure friend exists in network
+		// makes sure friend exists in network
 		if (this.socialNetwork.isAlreadyUser(friendName) == false) {
 			Alert al = new Alert(AlertType.WARNING);
-			al.setContentText(
-					friendName + " is not a user in the network.");
+			al.setContentText(friendName + " is not a user in the network.");
 			al.showAndWait();
 			return;
 		}
@@ -685,8 +691,7 @@ public class Main extends Application {
 
 		// Create a TableView to view mutual friends
 		TableView<Person> friendView = new TableView();
-		TableColumn<Person, ?> nameColumn = new TableColumn<>(
-				"First Name");
+		TableColumn<Person, ?> nameColumn = new TableColumn<>("First Name");
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
 		friendView.setPlaceholder(new Label("No mutual friends to display"));
 
@@ -762,12 +767,12 @@ public class Main extends Application {
 		MenuBar menuBar = new MenuBar();
 
 		Menu menu = new Menu("Options");
-		
+
 		// save actions, need to implement the save feature
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction(e -> {
 			try {
-				//Closes if there has been network created
+				// Closes if there has been network created
 				if (this.socialNetwork == null) {
 					Platform.exit();
 					System.exit(0);
@@ -855,18 +860,108 @@ public class Main extends Application {
 		return menuBar;
 	}
 
+	private Canvas startGraph() {
+		StackPane bp = new StackPane();
+		Scene graphScene = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+		Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		drawGraph(gc);
+
+		Button backButton = new Button("Back");
+		backButton.setOnAction(e -> adminScreen());
+		bp.getChildren().add(canvas);
+		bp.getChildren().add(backButton);
+		stage.setScene(graphScene);
+		System.out.println("Done");
+
+		return canvas;
+	}
+
 	// not sure what +field : type is
 
 	private void drawGraph(GraphicsContext gc) {
+		int numUsers = socialNetwork.allUsers().size(); // get numusers so
+														// spacing is easier
 
+		// find smallest n*n or n*(n-1) which is larger than numUsers
+		int numSquares = 1; // numSquares = x*y
+		int x = 1;
+		int y = 1;
+
+		while (numSquares < numUsers) {
+			if (x % 2 == 1) { // so every two steps
+				x++;
+			} else {
+				y++;
+			}
+			numSquares = x * y; // should go like: 1, 2, 4, 6, 9, 12, ...
+		}
+
+		// now have to get even spacing on x and y -> WINDOW_WIDTH / x, HEIGHT /
+		// y
+		int spaceX = WINDOW_WIDTH / x;
+		int spaceY = WINDOW_HEIGHT / y;
+
+		// divide each by 2 to get the center square for beginning node
+		double xPos = spaceX / 2;
+		double yPos = spaceY / 2;
+		// initial value saved so that can return to the proper xVal when
+		// changing y
+		double initX = xPos;
+		
+		// store the coordinates of each user inside a hash map
+		HashMap<Person, double[]> coordMap = new HashMap<>();
+
+		// add the nodes
+		for (Person p : socialNetwork.allUsers()) {
+			// we have to fix our null pointers
+			if (p == null) {
+				continue;
+			}
+			drawNode(gc, p.getName(), xPos, yPos);
+			xPos += spaceX; // increment to middle of next area
+
+			if (xPos > WINDOW_WIDTH) {
+				xPos = initX; // reset x and increment y
+				yPos += spaceY;
+			}
+			
+			double[] coords = {xPos, yPos};
+			coordMap.put(p, coords); // associate the coordinates with a person
+		}
+		
+		// now add edges
+		// get all the friends of each person
+		for (Person p1 : socialNetwork.allUsers()) {
+			double[] p1Coords = coordMap.get(p1);
+			if (p1 == null) {
+				continue;
+			}
+			for (Person p2 : socialNetwork.getFriends(p1.getName())) {
+				if (p2 == null) {
+					continue;
+				}
+				double[] p2Coords = coordMap.get(p2);
+				if (p2Coords == null) {
+					continue;
+				}
+				System.out.println("Draw");
+				drawEdge(gc, p1Coords[0], p1Coords[1], p2Coords[0], p2Coords[1]);				
+			}
+		}
 	}
 
 	private void drawNode(GraphicsContext gc, String name, double x, double y) {
-
+		gc.setFill(Color.RED);
+		gc.fillOval(x, y, 50, 50);
+		gc.setFill(Color.BLACK);
+		gc.strokeText(name, x, y);
 	}
 
 	private void drawEdge(GraphicsContext gc, double x1, double y1, double x2,
 			double y2) {
+		gc.setFill(Color.BLACK);
+		gc.strokeLine(x1, y1, x2, y2);
 
 	}
 
