@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Graph implements GraphADT {
@@ -169,6 +170,65 @@ public class Graph implements GraphADT {
 	@Override
 	public Set<Person> getAllNodes() {
 		return adjList.keySet();
+	}
+	
+	/**
+	 * Method to return a list of the shortest path between 2 nodes/
+	 */
+	public List<String> getShortestPath(String user1, String user2) {
+		//Map to store parents and list to store list
+		Map<String, String> parents = new HashMap<String, String>();
+		List<Person> tmp = new LinkedList<Person>();
+		
+		//Starting person
+		Person begin = this.getPerson(user1);
+		tmp.add(begin);
+		parents.put(user1, null);
+		
+		//go through all friends/users
+		while (tmp.size() > 0) {
+			Person current = tmp.get(0);
+			Set<Person> neighbors = this.getNeighbors(current);
+			
+			//iterate through neighbors
+			for (Person neighbor : neighbors) {
+				String name = neighbor.getName();
+				
+				//check for visited
+				boolean visited = parents.containsKey(name);
+				if (visited != true) {
+					tmp.add(neighbor);
+					parents.put(name, current.getName());
+					
+					//return shortest path if reached
+					if (name.equals(user2)) {
+						return path(parents, user2);
+					}
+				}
+			}
+			tmp.remove(0); //remove starting
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Private helper method to help getShortestPath by getting path
+	 * @param parents map of parents
+	 * @param user2 name of user2
+	 * @return list of path
+	 */
+	private List<String> path(Map<String, String> parents, String user2) {
+		List<String> path = new LinkedList<String>();
+		String person = user2;
+		
+		//go through whole path
+		while (person != null) {
+			path.add(0, person);
+			String parent = parents.get(person);
+			person = parent;
+		}
+		return path;
 	}
 
 }

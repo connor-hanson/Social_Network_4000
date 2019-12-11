@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
@@ -97,10 +98,29 @@ class SocialExperiments {
 	}
 	
 	@Test
+<<<<<<< HEAD
 	void test003_Dijkstra() {
 		network = new SocialNetwork("Test3.txt");
 		
 		
+=======
+	void test003_shortest_path() {
+		network = new SocialNetwork("Test2.txt");
+
+		network.addUser("1");
+		network.addUser("2");
+		network.addUser("3");
+		
+		network.addFriends("1", "2");
+		network.addFriends("2", "3");
+		
+		List<Person> list = network.getShortestPath("1", "3");
+		for (Person p : list)
+			System.out.println(p.getName());
+		
+		if (list.size() != 3)
+			fail("List size should be 3");
+>>>>>>> 0214471344ca637812a2eb64a21c8cd0c0139b82
 	}
 
 }
