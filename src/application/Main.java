@@ -682,7 +682,17 @@ public class Main extends Application {
 
 		// Button to delete acount
 		Button deleteAccount = new Button("DELETE ACCOUNT");
-		deleteAccount.setOnAction(e -> deleteAccount(username)); // implement
+		deleteAccount.setOnAction(e -> {
+			Alert al = new Alert(AlertType.CONFIRMATION);
+			al.setContentText("Delete account?");
+			
+			// if user confirms, remove user and return to the login screen
+			Optional<ButtonType> resp = al.showAndWait();
+			if (resp.isPresent() && resp.get() == ButtonType.OK) {
+				socialNetwork.removeUser(username);
+				loginScreen();
+			}
+		});
 		vBox.getChildren().add(deleteAccount);
 
 		// Adding elements to borderpane
