@@ -440,26 +440,24 @@ public class Main extends Application {
 		box1.getChildren().add(insideBox1);
 		shortestFriendPath.setOnAction(e -> {
 			// make sure user can't enter empty string as username
-			if (user1.getText().length() == 0 || 
-					user2.getText().length() == 0) {
+			if (user1.getText().length() == 0
+					|| user2.getText().length() == 0) {
 				Alert al = new Alert(AlertType.WARNING);
 				al.setContentText("Usernames can't be empty");
 				al.showAndWait();
 			}
-			//makes sure each user exists in the network
+			// makes sure each user exists in the network
 			else if (!socialNetwork.isAlreadyUser(user1.getText())) {
 				Alert al = new Alert(AlertType.WARNING);
 				al.setContentText(user1.getText()
 						+ " is not a registered user in the network.");
 				al.showAndWait();
-			}
-			else if (!socialNetwork.isAlreadyUser(user2.getText())) {
+			} else if (!socialNetwork.isAlreadyUser(user2.getText())) {
 				Alert al = new Alert(AlertType.WARNING);
 				al.setContentText(user2.getText()
 						+ " is not a registered user in the network.");
 				al.showAndWait();
-			}
-			else 
+			} else
 				shortestPath(user1.getText(), user2.getText());
 		});
 		options.getChildren().add(box1);
@@ -479,39 +477,41 @@ public class Main extends Application {
 		box2.getChildren().add(insideBox2);
 		listMutualFriends.setOnAction(e -> {
 			// make sure user can't enter empty string as username
-			if (userUno.getText().length() == 0 || 
-					userDos.getText().length() == 0) {
+			if (userUno.getText().length() == 0
+					|| userDos.getText().length() == 0) {
 				Alert al = new Alert(AlertType.WARNING);
 				al.setContentText("Usernames can't be empty");
 				al.showAndWait();
 			}
-			//makes sure each user exists in the network
+			// makes sure each user exists in the network
 			else if (!socialNetwork.isAlreadyUser(userUno.getText())) {
 				Alert al = new Alert(AlertType.WARNING);
 				al.setContentText(userUno.getText()
 						+ " is not a registered user in the network.");
 				al.showAndWait();
-			}
-			else if (!socialNetwork.isAlreadyUser(userDos.getText())) {
+			} else if (!socialNetwork.isAlreadyUser(userDos.getText())) {
 				Alert al = new Alert(AlertType.WARNING);
 				al.setContentText(userDos.getText()
 						+ " is not a registered user in the network.");
 				al.showAndWait();
-			}
-			else 
+			} else
 				mutualFriend(userUno.getText(), userDos.getText());
-			});
+		});
 		options.getChildren().add(box2);
 
-		// Button to view total # of users and friendships
-		Button totalConnections = new Button(
-				"View Total Number of Users and Friendships");
-		totalConnections.setOnAction(e -> viewTotal()); // implement
+		// Label showing view total # of users and friendships
+		Label totalConnections = new Label(
+				"Total Number of Users and Friendships: "
+						+ socialNetwork.allUsers().size());
 		options.getChildren().add(totalConnections);
 
 		Button userGraph = new Button("Visualize network");
 		userGraph.setOnAction(e -> startGraph());
 		options.getChildren().add(userGraph);
+
+		Button backButton = new Button("Back");
+		backButton.setOnAction(e -> loginScreen());
+		bp.setBottom(backButton);
 
 //		HBox box3 = new HBox();
 //		Button search = new Button("Search");
@@ -525,31 +525,39 @@ public class Main extends Application {
 
 		stage.setScene(adminScreen);
 	}
-	
+
 	/**
 	 * Private helper method to view (in a list) shortest path between 2 users
+	 * 
 	 * @param user1 the starting user of the shortest path
 	 * @param user2 the ending user of the shortest path
 	 */
 	private void shortestPath(String user1, String user2) {
-		//Label to display info of shortest path at bottom of pane
-		Label label = new Label("Shortest path "
-				+ "from " + user1 + " to " + user2);
-		
-		//Get set of the shortest path
-		List<Person> shortestPath = 
-				this.socialNetwork.getShortestPath(user1, user2);
-		
-		//ListView to display list of shortest path
+		HBox bottomBox = new HBox(20); // contains bottom label and back button
+		// Label to display info of shortest path at bottom of pane
+		Label label = new Label(
+				"Shortest path " + "from " + user1 + " to " + user2);
+
+		// Get set of the shortest path
+		List<Person> shortestPath = this.socialNetwork.getShortestPath(user1,
+				user2);
+
+		// ListView to display list of shortest path
 		ListView<String> listPath = new ListView();
-		//iterate through list and add to ListView
+		// iterate through list and add to ListView
 		for (Person p : shortestPath)
 			listPath.getItems().add(p.getName());
+
+		Button backButton = new Button("Back");
+		backButton.setOnAction(e -> adminScreen());
+
+		bottomBox.getChildren().add(backButton);
+		bottomBox.getChildren().add(label);
 		
 		// Adding elements to borderpane
 		BorderPane bp = new BorderPane();
 		bp.setTop(menuBar());
-		bp.setBottom(label);
+		bp.setBottom(bottomBox);
 		bp.setCenter(listPath);
 		// Create scene, and set scene
 		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -670,6 +678,12 @@ public class Main extends Application {
 		// bp.setTop(userLabel);
 		bp.setTop(menuBar());
 		bp.setCenter(vBox);
+
+		// create a back button at the bottom of the screen
+		Button backButton = new Button("Back");
+		backButton.setOnAction(e -> loginScreen());
+		bp.setBottom(backButton);
+
 		// Create scene, and set scene
 		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
 		stage.setScene(userScreen);
@@ -682,6 +696,8 @@ public class Main extends Application {
 	 */
 	// TODO add type args to friendView, view
 	private void viewFriendsList(String username) {
+		HBox bottomBox = new HBox(20); // Hbox containing bottom text and back
+										// button
 		// create label to display username at bottom
 		Label userLabel = new Label("Friends of: " + username
 				+ "\nDouble Click Friend to View Their Friends");
@@ -717,10 +733,16 @@ public class Main extends Application {
 			return row;
 		});
 
+		// add a back button
+		Button backButton = new Button("Back");
+		backButton.setOnAction(e -> userScreen(username));
+		bottomBox.getChildren().add(backButton);
+		bottomBox.getChildren().add(userLabel);
+
 		// Adding elements to borderpane
 		BorderPane bp = new BorderPane();
 		bp.setTop(menuBar());
-		bp.setBottom(userLabel);
+		bp.setBottom(bottomBox);
 		bp.setCenter(friendView);
 		// Create scene, and set scene
 		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -764,6 +786,7 @@ public class Main extends Application {
 	 * @param friendName of the user to see which mutual friends are shared
 	 */
 	private void mutualFriend(String username, String friendName) {
+		HBox bottomBox = new HBox(20);
 		// create label to display username at top
 		Label userLabel = new Label(
 				"Mutual Friends of: " + username + " and " + friendName);
@@ -783,11 +806,17 @@ public class Main extends Application {
 		for (Person p : friends) {
 			friendView.getItems().add(new Person(p.getName()));
 		}
+		
+		Button backButton = new Button("Back");
+		backButton.setOnAction(e -> adminScreen());
+		
+		bottomBox.getChildren().add(backButton);
+		bottomBox.getChildren().add(userLabel);
 
 		// Adding elements to borderpane
 		BorderPane bp = new BorderPane();
 		bp.setTop(menuBar());
-		bp.setBottom(userLabel);
+		bp.setBottom(bottomBox);
 		bp.setCenter(friendView);
 		// Create scene, and set scene
 		Scene userScreen1 = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -918,18 +947,17 @@ public class Main extends Application {
 			}
 
 		});
-		
-		//MenuItem to sign out of current user
+
+		// MenuItem to sign out of current user
 		MenuItem signOut = new MenuItem("Sign out");
 		signOut.setOnAction(e -> {
-			//makes sure social network has been created before entering login
+			// makes sure social network has been created before entering login
 			if (this.socialNetwork == null) {
 				Alert alert = new Alert(AlertType.WARNING);
-				alert.setContentText("Must create network before "
-						+ "trying to sign out.");
+				alert.setContentText(
+						"Must create network before " + "trying to sign out.");
 				alert.showAndWait();
-			}
-			else
+			} else
 				loginScreen();
 		});
 
@@ -942,14 +970,13 @@ public class Main extends Application {
 
 		MenuItem loginScreen = new MenuItem("Login Screen");
 		loginScreen.setOnAction(e -> {
-			//makes sure social network has been created before entering login
+			// makes sure social network has been created before entering login
 			if (this.socialNetwork == null) {
 				Alert alert = new Alert(AlertType.WARNING);
-				alert.setContentText("Must create network before "
-						+ "trying to login.");
+				alert.setContentText(
+						"Must create network before " + "trying to login.");
 				alert.showAndWait();
-			}
-			else
+			} else
 				loginScreen();
 		});
 
@@ -961,8 +988,8 @@ public class Main extends Application {
 	}
 
 	private Canvas startGraph() {
-		StackPane bp = new StackPane();
-		Scene graphScene = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+		BorderPane bp = new BorderPane();
+		Scene graphScene = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT - 50);
 		Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		drawGraph(gc);
@@ -970,7 +997,7 @@ public class Main extends Application {
 		Button backButton = new Button("Back");
 		backButton.setOnAction(e -> adminScreen());
 		bp.getChildren().add(canvas);
-		bp.getChildren().add(backButton);
+		bp.setBottom(backButton);
 		stage.setScene(graphScene);
 		System.out.println("Done");
 
@@ -1008,7 +1035,7 @@ public class Main extends Application {
 		// initial value saved so that can return to the proper xVal when
 		// changing y
 		double initX = xPos;
-		
+
 		// store the coordinates of each user inside a hash map
 		HashMap<Person, double[]> coordMap = new HashMap<>();
 
@@ -1025,11 +1052,11 @@ public class Main extends Application {
 				xPos = initX; // reset x and increment y
 				yPos += spaceY;
 			}
-			
-			double[] coords = {xPos, yPos};
+
+			double[] coords = { xPos, yPos };
 			coordMap.put(p, coords); // associate the coordinates with a person
 		}
-		
+
 		// now add edges
 		// get all the friends of each person
 		for (Person p1 : socialNetwork.allUsers()) {
@@ -1046,7 +1073,8 @@ public class Main extends Application {
 					continue;
 				}
 				System.out.println("Draw");
-				drawEdge(gc, p1Coords[0], p1Coords[1], p2Coords[0], p2Coords[1]);				
+				drawEdge(gc, p1Coords[0], p1Coords[1], p2Coords[0],
+						p2Coords[1]);
 			}
 		}
 	}
