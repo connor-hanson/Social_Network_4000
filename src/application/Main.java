@@ -437,7 +437,7 @@ public class Main extends Application {
 		box1.getChildren().add(insideBox1);
 		options.getChildren().add(box1);
 
-		// Hbox to create a button and texti field to view mutual friends
+		// Hbox to create a button and text field to view mutual friends
 		// between 2 users
 		HBox box2 = new HBox();
 		Button listMutualFriends = new Button("Mutual Friends");
@@ -450,8 +450,30 @@ public class Main extends Application {
 		userDos.setPromptText("Username 2");
 		insideBox2.getChildren().add(userDos);
 		box2.getChildren().add(insideBox2);
-		listMutualFriends.setOnAction(
-				e -> mutualFriend(userUno.getText(), userDos.getText()));
+		listMutualFriends.setOnAction(e -> {
+			// make sure user can't enter empty string as username
+			if (userUno.getText().length() == 0 || 
+					userDos.getText().length() == 0) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText("Usernames can't be empty");
+				al.showAndWait();
+			}
+			//makes sure each user exists in the network
+			else if (!socialNetwork.isAlreadyUser(userUno.getText())) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText(userUno.getText()
+						+ " is not a registered user in the network.");
+				al.showAndWait();
+			}
+			else if (!socialNetwork.isAlreadyUser(userDos.getText())) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText(userDos.getText()
+						+ " is not a registered user in the network.");
+				al.showAndWait();
+			}
+			else 
+				mutualFriend(userUno.getText(), userDos.getText());
+			});
 		options.getChildren().add(box2);
 
 		// Button to view total # of users and friendships
@@ -464,12 +486,12 @@ public class Main extends Application {
 		userGraph.setOnAction(e -> startGraph());
 		options.getChildren().add(userGraph);
 
-		HBox box3 = new HBox();
-		Button search = new Button("Search");
-		box3.getChildren().add(search);
-		TextField user = new TextField("Username");
-		box3.getChildren().add(user);
-		options.getChildren().add(box3);
+//		HBox box3 = new HBox();
+//		Button search = new Button("Search");
+//		box3.getChildren().add(search);
+//		TextField user = new TextField("Username");
+//		box3.getChildren().add(user);
+//		options.getChildren().add(box3);
 
 		Button reset = new Button("Reset Network"); // add functionality
 		options.getChildren().add(reset);
