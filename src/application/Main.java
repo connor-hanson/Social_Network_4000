@@ -54,6 +54,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -424,6 +425,8 @@ public class Main extends Application {
 		VBox options = new VBox();
 		bp.setCenter(options);
 
+		// Hbox to create a button and text fields to view the shortest path
+		// between 2 users
 		HBox box1 = new HBox();
 		Button shortestFriendPath = new Button("Find Shortest Path");
 		box1.getChildren().add(shortestFriendPath);
@@ -435,9 +438,33 @@ public class Main extends Application {
 		user2.setPromptText("Username 2");
 		insideBox1.getChildren().add(user2);
 		box1.getChildren().add(insideBox1);
+		shortestFriendPath.setOnAction(e -> {
+			// make sure user can't enter empty string as username
+			if (user1.getText().length() == 0 || 
+					user2.getText().length() == 0) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText("Usernames can't be empty");
+				al.showAndWait();
+			}
+			//makes sure each user exists in the network
+			else if (!socialNetwork.isAlreadyUser(user1.getText())) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText(user1.getText()
+						+ " is not a registered user in the network.");
+				al.showAndWait();
+			}
+			else if (!socialNetwork.isAlreadyUser(user2.getText())) {
+				Alert al = new Alert(AlertType.WARNING);
+				al.setContentText(user2.getText()
+						+ " is not a registered user in the network.");
+				al.showAndWait();
+			}
+			else 
+				shortestPath(user1.getText(), user2.getText());
+		});
 		options.getChildren().add(box1);
 
-		// Hbox to create a button and text field to view mutual friends
+		// Hbox to create a button and text fields to view mutual friends
 		// between 2 users
 		HBox box2 = new HBox();
 		Button listMutualFriends = new Button("Mutual Friends");
@@ -497,6 +524,36 @@ public class Main extends Application {
 		options.getChildren().add(reset);
 
 		stage.setScene(adminScreen);
+	}
+	
+	/**
+	 * Private helper method to view (in a list) shortest path between 2 users
+	 * @param user1 the starting user of the shortest path
+	 * @param user2 the ending user of the shortest path
+	 */
+	private void shortestPath(String user1, String user2) {
+		//Label to display info of shortest path at bottom of pane
+		Label label = new Label("Shortest path "
+				+ "from " + user1 + " to " + user2);
+		
+		//Get set of the shortest path
+		List<Person> shortestPath = 
+				this.socialNetwork.getShortestPath(user1, user2);
+		
+		//ListView to display list of shortest path
+		ListView<String> listPath = new ListView();
+		//iterate through list and add to ListView
+		for (Person p : shortestPath)
+			listPath.getItems().add(p.getName());
+		
+		// Adding elements to borderpane
+		BorderPane bp = new BorderPane();
+		bp.setTop(menuBar());
+		bp.setBottom(label);
+		bp.setCenter(listPath);
+		// Create scene, and set scene
+		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+		stage.setScene(userScreen);
 	}
 
 	/**
