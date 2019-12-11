@@ -109,26 +109,6 @@ public class Main extends Application {
 		topBox.getChildren().add(title);
 
 		root.setTop(topBox);
-
-		// contains the elements in the center of the page, load and create
-		// files
-		// make 2 boxes to separate the load and create functions
-//		VBox createAndLoadNetwork = twoInputBox("Create network: ",
-//				"Load network: ");
-//		root.setCenter(createAndLoadNetwork); // moved the buttons so that we
-//												// can add load/save
-//												// functionality to them
-//		Button create = new Button("Create");
-//		Button load = new Button("Load");
-//		createAndLoadNetwork.getChildren().add(create);
-//		createAndLoadNetwork.getChildren().add(load);
-//		// create a new social network
-//		create.setOnAction(e -> {
-//			this.socialNetwork = new SocialNetwork(); // has to have a name
-//			loginScreen();
-//		});
-//
-//		load.setOnAction(e -> socialNetwork().loadFromFile());
 		
 		VBox makeNetwork = createOrLoadNetwork();
 		root.setCenter(makeNetwork);
@@ -140,7 +120,7 @@ public class Main extends Application {
 	}
 
 	/**
-	 * used this method so we can recall the first page, without needing try
+	 * Used this method so we can recall the first page, without needing try
 	 * catch blocks everywhere
 	 */
 	private void firstPage() {
@@ -161,18 +141,8 @@ public class Main extends Application {
 		return null;
 	}
 
-	public VBox signUpBox() {
-
-		return null;
-	}
-
-	private VBox setUpSignUpBox() {
-
-		return null;
-	}
-
 	/**
-	 * Methdo to make a two input VBox
+	 * Method to make a two input VBox
 	 * 
 	 * @param input1
 	 * @param input2
@@ -184,9 +154,9 @@ public class Main extends Application {
 	}
 
 	/**
-	 * method to create the load and create fields that the user is greeted with
+	 * Method to create the load and create fields that the user is greeted with
 	 * 
-	 * @return
+	 * @return VBox to create/load a network
 	 */
 	private VBox createOrLoadNetwork() {
 		VBox container = new VBox();
@@ -281,18 +251,14 @@ public class Main extends Application {
 
 		Label inputLabel2 = new Label(input2);
 		TextField field2 = new TextField();
-		// Button button2 = new Button("Done");
-		// box2.getChildren().add(inputLabel2);
-		// box2.getChildren().add(field2);
-		// box2.getChildren().add(button2);
-
-//		// create or load social network
-//		button1.setOnAction(e -> loginScreen());
-//		button2.setOnAction(e -> loginScreen());
 
 		return twoInputBox;
 	}
 
+	/**
+	 * Creates a VBox for logging in
+	 * @return elements of loginbox in a VBox
+	 */
 	public VBox loginBox() {
 		// set up the containers for the login field
 		VBox loginBox = new VBox();
@@ -343,13 +309,6 @@ public class Main extends Application {
 		BorderPane pane = new BorderPane();
 		Scene loginScene = new Scene(pane, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-		// refactored all of the below into the loginBox() method, has the same
-		// functionality but easier to edit, - Connor
-//		VBox loginBox = twoInputBox("Username: ", "Password: ");
-//		Button logonButton = new Button("Login");
-//		loginBox.getChildren().add(logonButton);
-//		logonButton.setOnAction(e -> userScreen("USER"));
-
 		VBox loginBox = loginBox();
 		pane.setCenter(loginBox);
 
@@ -391,13 +350,6 @@ public class Main extends Application {
 				socialNetwork.addUser(userName.getText());
 				userScreen(userName.getText());
 			}
-
-//			// cant figure out how to get the text input
-//			// maybe move this stuff to signup box
-//			result.ifPresent(name -> {
-//				this.socialNetwork.addUser(name);
-//				this.userScreen(name);
-//			});
 
 		});
 		// end of create account button actions
@@ -523,13 +475,6 @@ public class Main extends Application {
 		Button backButton = new Button("Back");
 		backButton.setOnAction(e -> loginScreen());
 		bp.setBottom(backButton);
-
-//		HBox box3 = new HBox();
-//		Button search = new Button("Search");
-//		box3.getChildren().add(search);
-//		TextField user = new TextField("Username");
-//		box3.getChildren().add(user);
-//		options.getChildren().add(box3);
 
 		Button reset = new Button("Reset Network"); // add functionality
 		reset.setOnAction(e -> {
@@ -731,7 +676,6 @@ public class Main extends Application {
 	 * 
 	 * @param username of the user who's friends will be shown
 	 */
-	// TODO add type args to friendView, view
 	private void viewFriendsList(String username) {
 		HBox bottomBox = new HBox(20); // Hbox containing bottom text and back
 										// button
@@ -859,42 +803,6 @@ public class Main extends Application {
 		// Create scene, and set scene
 		Scene userScreen1 = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
 		stage.setScene(userScreen1);
-	}
-
-	/**
-	 * Private helper method to see if a user exists
-	 * 
-	 * @param username
-	 */
-	private boolean search(String username) {
-		// TODO Implement if a user exists or not in the network
-		return false;
-	}
-
-	/**
-	 * Private helper method to delete an account
-	 * 
-	 * @param username of the account to delete
-	 */
-	private void deleteAccount(String username) {
-		// delete user from socialnetwork
-		this.socialNetwork.removeUser(username);
-	}
-
-	public VBox centerBox() {
-		return null;
-	}
-
-	private VBox setUpCenterBox() {
-		return null;
-	}
-
-	public VBox bottomBox() {
-		return null;
-	}
-
-	private VBox setUpBottomBox() {
-		return null;
 	}
 
 	/*
@@ -1045,6 +953,10 @@ public class Main extends Application {
 		return menuBar;
 	}
 
+	/**
+	 * Canvas to view the visualization of the Social Network
+	 * @return starting Canvas
+	 */
 	private Canvas startGraph() {
 		BorderPane bp = new BorderPane();
 		Scene graphScene = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT - 50);
@@ -1062,8 +974,10 @@ public class Main extends Application {
 		return canvas;
 	}
 
-	// not sure what +field : type is
-
+	/**
+	 * Drawing graph
+	 * @param gc to use for drawGraph
+	 */
 	private void drawGraph(GraphicsContext gc) {
 		int numUsers = socialNetwork.allUsers().size(); // get numusers so
 														// spacing is easier
@@ -1137,6 +1051,13 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Drawing node
+	 * @param gc to use
+	 * @param name of node 
+	 * @param x coordinate
+	 * @param y coordinate
+	 */
 	private void drawNode(GraphicsContext gc, String name, double x, double y) {
 		gc.setFill(Color.RED);
 		gc.fillOval(x, y, 50, 50);
@@ -1144,6 +1065,14 @@ public class Main extends Application {
 		gc.strokeText(name, x, y);
 	}
 
+	/**
+	 * Drawing edge
+	 * @param gc to use
+	 * @param x1 coordinate
+	 * @param y1 coordinate
+	 * @param x2 coordinate (ending)
+	 * @param y2 coordinate (ending)////
+	 */
 	private void drawEdge(GraphicsContext gc, double x1, double y1, double x2,
 			double y2) {
 		gc.setFill(Color.BLACK);
@@ -1151,14 +1080,10 @@ public class Main extends Application {
 
 	}
 
-	private String getNameFromCoordinates(double x, double y) {
-		return null;
-	}
-
-	private void setSelectedUser(String name) {
-
-	}
-
+	/**
+	 * Main method to launch
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
