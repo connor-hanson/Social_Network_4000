@@ -701,6 +701,9 @@ public class Main extends Application {
 			// if user confirms, remove user and return to the login screen
 			Optional<ButtonType> resp = al.showAndWait();
 			if (resp.isPresent() && resp.get() == ButtonType.OK) {
+				//removes number of friends from total friendships
+				this.totalFriendships -= 
+						this.socialNetwork.getFriends(username).size();
 				socialNetwork.removeUser(username);
 				loginScreen();
 			}
@@ -876,8 +879,6 @@ public class Main extends Application {
 	private void deleteAccount(String username) {
 		// delete user from socialnetwork
 		this.socialNetwork.removeUser(username);
-		//removes number of friends from total friendships
-		this.totalFriendships -= this.socialNetwork.getFriends(username).size();
 	}
 
 	public VBox centerBox() {
