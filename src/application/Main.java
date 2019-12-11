@@ -918,9 +918,20 @@ public class Main extends Application {
 			}
 
 		});
-
+		
+		//MenuItem to sign out of current user
 		MenuItem signOut = new MenuItem("Sign out");
-		signOut.setOnAction(e -> loginScreen()); // test l8ter
+		signOut.setOnAction(e -> {
+			//makes sure social network has been created before entering login
+			if (this.socialNetwork == null) {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setContentText("Must create network before "
+						+ "trying to sign out.");
+				alert.showAndWait();
+			}
+			else
+				loginScreen();
+		});
 
 		menu.getItems().addAll(save, load, exit, signOut);
 
@@ -930,7 +941,17 @@ public class Main extends Application {
 		origPage.setOnAction(e -> firstPage());
 
 		MenuItem loginScreen = new MenuItem("Login Screen");
-		loginScreen.setOnAction(e -> loginScreen());
+		loginScreen.setOnAction(e -> {
+			//makes sure social network has been created before entering login
+			if (this.socialNetwork == null) {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setContentText("Must create network before "
+						+ "trying to login.");
+				alert.showAndWait();
+			}
+			else
+				loginScreen();
+		});
 
 		pages.getItems().addAll(origPage, loginScreen);
 
