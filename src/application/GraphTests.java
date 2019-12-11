@@ -1,3 +1,33 @@
+/**
+ * Filename:   GraphTests.java
+ * 
+ * Name: Daniel de Monteiro
+ * Email: demonteiro@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Name: Connor Hanson
+ * Email: cbhanson2@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Name: Mitchell Alley
+ * Email: mgalley@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 001
+ * 
+ * Name: George Khankeldian
+ * Email: khankeldian@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Due Date: December 11, 2019
+ * 
+ * Project Name: a3 ATEAM Project Milestone 3 GUI
+ * Description: Create a GUI to show the social network. Implement the
+ * functionality of the Social Network to the GUI. 
+ */
+
 package application;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,9 +39,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * 
+ * @author Daniel de Monteiro, Connor Hanson, Mitchell Alley, George Khankeldian
+ *
+ */
 class GraphTests {
 
-	private static Graph graph;
+	private static Graph graph; //graph to use for testing
 
 	@BeforeEach
 	void setUp() throws Exception {

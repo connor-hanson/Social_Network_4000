@@ -21,10 +21,11 @@
  * Class: CS400 - Debra Deppeler
  * Lecture Number: LEC 002
  * 
- * Due Date: December 3, 2019
+ * Due Date: December 11, 2019
  * 
- * Project Name: a2 ATEAM Project Milestone 2 GUI
- * Description: Create a GUI to show the social network
+ * Project Name: a3 ATEAM Project Milestone 3 GUI
+ * Description: Create a GUI to show the social network. Implement the
+ * functionality of the Social Network to the GUI. 
  */
 
 package application;

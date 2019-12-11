@@ -1,3 +1,33 @@
+/**
+ * Filename:   SocialNetwork.java
+ * 
+ * Name: Daniel de Monteiro
+ * Email: demonteiro@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Name: Connor Hanson
+ * Email: cbhanson2@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Name: Mitchell Alley
+ * Email: mgalley@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 001
+ * 
+ * Name: George Khankeldian
+ * Email: khankeldian@wisc.edu
+ * Class: CS400 - Debra Deppeler
+ * Lecture Number: LEC 002
+ * 
+ * Due Date: December 11, 2019
+ * 
+ * Project Name: a3 ATEAM Project Milestone 3 GUI
+ * Description: Create a GUI to show the social network. Implement the
+ * functionality of the Social Network to the GUI. 
+ */
+
 package application;
 
 import java.io.File;
@@ -13,19 +43,24 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+/**
+ * Class that implements SocialNetworkADT and creates a SocialNetwork
+ * @author Daniel de Monteiro, Connor Hanson, Mitchell Alley, George Khankeldian
+ *
+ */
 public class SocialNetwork implements SocialNetworkADT {
 
-	private Graph graph;
+	private Graph graph; //graph to use for SocialNetwork
 	private File log; // different from the save file
-	private String networkName;
-	private PrintWriter fileWriter;
+	private String networkName; //Name of network
+	private PrintWriter fileWriter; //fileWriter to write to files
 
-	// TODO add every action to the log, which is saved when the save method is
-	// called
-
-	// Main class ensures that the name ends in .txt
-	// ex, if user inputs network, passed to this class as network.txt
-	// if user inputs network.txt, nothing is changed
+	/**
+	 * Ensures that the name ends in .txt
+	 * ex, if user inputs network, passed to this class as network.txt
+	 * if user inputs network.txt, nothing is changed
+	 * @param networkName name of Network
+	 */
 	public SocialNetwork(String networkName) {
 		graph = new Graph();
 		this.networkName = networkName;
@@ -39,9 +74,13 @@ public class SocialNetwork implements SocialNetworkADT {
 			System.err.print("Error loading PrintWriter for log.txt");
 			System.err.print(e.getMessage());
 		}
-
 	}
 	
+	/**
+	 * Checks if user already exists in network
+	 * @param name of user to check
+	 * @return if user exists in graph
+	 */
 	public boolean isAlreadyUser(String name) {
 		if (name == null)
 			return false;
@@ -49,14 +88,20 @@ public class SocialNetwork implements SocialNetworkADT {
 			return false;		
 		else 
 			return true;
-		
 	}
 
+	/**
+	 * Get Person from name
+	 * @param name of Person to get
+	 * @return the Person with given namee
+	 */
 	private Person getPerson(String name) {
-		return graph.getPerson(name);
-//		
+		return graph.getPerson(name);	
 	}
 
+	/**
+	 * Add a friendship between 2 users
+	 */
 	@Override
 	public boolean addFriends(String name1, String name2) {
 		if (name1 == null || name2 == null)
@@ -70,6 +115,9 @@ public class SocialNetwork implements SocialNetworkADT {
 		return graph.addEdge(p1, p2);
 	}
 
+	/**
+	 * Remove friends between 2 users
+	 */
 	@Override
 	public boolean removeFriends(String name1, String name2) {
 		if (name1 == null || name2 == null)
@@ -83,6 +131,9 @@ public class SocialNetwork implements SocialNetworkADT {
 		return graph.removeEdge(p1, p2);
 	}
 
+	/**
+	 * Add a user to the network
+	 */
 	@Override
 	public boolean addUser(String name) {
 		if (name == null)
@@ -95,6 +146,9 @@ public class SocialNetwork implements SocialNetworkADT {
 		return graph.addNode(p);
 	}
 
+	/**
+	 * Remove user from network
+	 */
 	@Override
 	public boolean removeUser(String name) {
 		if (name == null)
@@ -107,6 +161,9 @@ public class SocialNetwork implements SocialNetworkADT {
 		return graph.removeNode(p);
 	}
 
+	/**
+	 * Get a Set of friends of a user
+	 */
 	@Override
 	public Set<Person> getFriends(String user) {
 		if (user == null)
@@ -119,6 +176,9 @@ public class SocialNetwork implements SocialNetworkADT {
 			return emptySet;
 	}
 
+	/*
+	 * Get mutual friends between 2 users
+	 */
 	@Override
 	public Set<Person> getMutualFriends(String user1, String user2) {
 		if (user1 == null || user2 == null)
@@ -154,6 +214,12 @@ public class SocialNetwork implements SocialNetworkADT {
 		return personPath;
 	}
 
+	/**
+	 * Depth first serach of the network
+	 * @param person to run the search on
+	 * @param unvisited users
+	 * @return Graph of a DFS on person
+	 */
 	public Graph depthFirstSearch(Person person, ArrayList<Person> unvisited) {
 		HashMap<Person, List<Person>> list = graph.getUsers();
 		ArrayList<Person> visited = new ArrayList<Person>();
@@ -182,6 +248,9 @@ public class SocialNetwork implements SocialNetworkADT {
 		return returnVal;
 	}
 
+	/**
+	 * Return set of connected components
+	 */
 	@Override
 	public Set<Graph> getConnectedComponents() {
 		ArrayList<Person> allPeople = new ArrayList<Person>();
@@ -199,6 +268,9 @@ public class SocialNetwork implements SocialNetworkADT {
 		return returnVal;
 	}
 	
+	/**
+	 * Load Network from a file
+	 */
 	@Override
 	public void loadFromFile() throws IOException {
 		File loadFile = new File("LogFiles/" + networkName);
@@ -238,9 +310,6 @@ public class SocialNetwork implements SocialNetworkADT {
 		}
 		
 		sc.close();
-
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
