@@ -276,5 +276,13 @@ public class SocialNetwork implements SocialNetworkADT {
 	public Set<Person> allUsers() {
 		return this.graph.getAllNodes();
 	}
+	
+	/**
+	 * Private helper method to reset the network
+	 */
+	public void resetNetwork() {
+		//Replace current graph with a new graph
+		this.graph = new Graph();
+	}
 
 }

@@ -521,6 +521,14 @@ public class Main extends Application {
 //		options.getChildren().add(box3);
 
 		Button reset = new Button("Reset Network"); // add functionality
+		reset.setOnAction(e -> {
+			this.socialNetwork.resetNetwork();
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setContentText("Social Network has been reset, "
+					+ "all users and friend connections have been removed.");
+			alert.setHeaderText("Network Reset");
+			alert.showAndWait();
+		});
 		options.getChildren().add(reset);
 
 		stage.setScene(adminScreen);
