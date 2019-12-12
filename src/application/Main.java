@@ -1045,7 +1045,6 @@ public class Main extends Application {
 				if (p2Coords == null) {
 					continue;
 				}
-				System.out.println("Draw");
 				drawEdge(gc, p1Coords[0], p1Coords[1], p2Coords[0],
 						p2Coords[1]);
 			}
