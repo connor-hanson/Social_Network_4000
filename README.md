@@ -18,4 +18,4 @@ None
 Other notes or comments to the grader:
 
 [place any comments or notes that will help the grader here]
-- Data examples are hardcoded in TableView in the viewFriendsList and viewFriendRequestsList methods (using Person class)
+- Sample data files are in LogFiles folder
