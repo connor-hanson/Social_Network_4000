@@ -485,6 +485,7 @@ public class Main extends Application {
 					+ "all users and friend connections have been removed.");
 			alert.setHeaderText("Network Reset");
 			alert.showAndWait();
+			adminScreen();
 		});
 		options.getChildren().add(reset);
 
