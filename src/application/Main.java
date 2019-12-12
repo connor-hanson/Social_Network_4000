@@ -1,31 +1,23 @@
 /**
- * Filename:   Main.java
+ * Filename: Main.java
  * 
- * Name: Daniel de Monteiro
- * Email: demonteiro@wisc.edu
- * Class: CS400 - Debra Deppeler
+ * Name: Daniel de Monteiro Email: demonteiro@wisc.edu Class: CS400 - Debra
+ * Deppeler Lecture Number: LEC 002
+ * 
+ * Name: Connor Hanson Email: cbhanson2@wisc.edu Class: CS400 - Debra Deppeler
  * Lecture Number: LEC 002
  * 
- * Name: Connor Hanson
- * Email: cbhanson2@wisc.edu
- * Class: CS400 - Debra Deppeler
- * Lecture Number: LEC 002
- * 
- * Name: Mitchell Alley
- * Email: mgalley@wisc.edu
- * Class: CS400 - Debra Deppeler
+ * Name: Mitchell Alley Email: mgalley@wisc.edu Class: CS400 - Debra Deppeler
  * Lecture Number: LEC 001
  * 
- * Name: George Khankeldian
- * Email: khankeldian@wisc.edu
- * Class: CS400 - Debra Deppeler
- * Lecture Number: LEC 002
+ * Name: George Khankeldian Email: khankeldian@wisc.edu Class: CS400 - Debra
+ * Deppeler Lecture Number: LEC 002
  * 
  * Due Date: December 11, 2019
  * 
- * Project Name: a3 ATEAM Project Milestone 3 GUI
- * Description: Create a GUI to show the social network. Implement the
- * functionality of the Social Network to the GUI. 
+ * Project Name: a3 ATEAM Project Milestone 3 GUI Description: Create a GUI to
+ * show the social network. Implement the functionality of the Social Network to
+ * the GUI.
  */
 
 package application;
@@ -38,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -82,1010 +73,1024 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-	private final int WINDOW_HEIGHT = 500; // window height (pixels)
-	private final int WINDOW_WIDTH = 500; // window width(pixels)
-	private final String APP_NAME = "Social Network 4000"; // app title
-	private Stage stage; // default primary stage
-	private SocialNetwork socialNetwork; // create SocialNetwork to use
-	private int totalFriendships; //total number of friendships counter
-
-	/**
-	 * Default start window when GUI is first run
-	 * Contains saving, creating a network, and loading a network
-	 */
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		BorderPane root = new BorderPane();
-		this.stage = primaryStage;
-		// starts with the load/create file scene
-		// user can load, create, save, or exit program
-		Scene loadScene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-		// contains the elements at the top of the page: title, save button
-
-		VBox topBox = new VBox();
-		topBox.getChildren().add(menuBar());
-
-		Label title = new Label(APP_NAME); // creates new title
-		topBox.getChildren().add(title);
-
-		root.setTop(topBox);
-		
-		VBox makeNetwork = createOrLoadNetwork();
-		root.setCenter(makeNetwork);
-
-		// add components to the GUI
-		primaryStage.setTitle(APP_NAME);
-		primaryStage.setScene(loadScene);
-		primaryStage.show();
-	}
-
-	/**
-	 * Used this method so we can recall the first page, without needing try
-	 * catch blocks everywhere
-	 */
-	private void firstPage() {
-		try {
-			start(stage);
-		} catch (Exception e) {
-			System.err.println("ya dunn fucked up");
-		}
-	}
-
-	/**
-	 * Loads a new or existing social network
-	 * 
-	 * @return
-	 */
-	public SocialNetwork socialNetwork() {
-
-		return null;
-	}
-
-	/**
-	 * Method to make a two input VBox
-	 * 
-	 * @param input1
-	 * @param input2
-	 * @return the Vbox
-	 */
-	public VBox twoInputBox(String input1, String input2) {
-		VBox twoInputBox = setUpTwoInputBox(input1, input2);
-		return twoInputBox;
-	}
-
-	/**
-	 * Method to create the load and create fields that the user is greeted with
-	 * 
-	 * @return VBox to create/load a network
-	 */
-	private VBox createOrLoadNetwork() {
-		VBox container = new VBox();
-		HBox line1 = new HBox();
-		HBox line2 = new HBox();
-
-		// The whole create area
-		Label createLabel = new Label("Create network: ");
-		TextField createField = new TextField();
-		createField.setPromptText("Enter as .txt");
-
-		Button createButton = new Button("Create");
-		createButton.setOnAction(e -> {
-			// invalid input, text length = 1
-			if (createField.getText().length() == 0) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText(
-						"File must have at least one character. Try again.");
-				al.showAndWait();
-			}
-
-			// valid input. First block appends .txt if user didn't type it in
-			else if (createField.getText().contains(".txt")) {
-				this.socialNetwork = new SocialNetwork(createField.getText());
-				loginScreen();
-			} else {
-				this.socialNetwork = new SocialNetwork(
-						createField.getText() + ".txt");
-				loginScreen();
-			}
-		}); // end of create button functionality
-
-		// load field and associated actions
-		Label loadArea = new Label("Load network: ");
-		TextField loadField = new TextField();
-		loadField.setPromptText("MUST enter as a .txt file");
-
-		Button loadButton = new Button("Load");
-		loadButton.setOnAction(e -> {
-			// if invalid input
-			if (!loadField.getText().contains(".txt")) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText("Invalid input, must end in .txt");
-				al.showAndWait();
-			} else {
-				try {
-					this.socialNetwork = new SocialNetwork(loadField.getText());
-					socialNetwork.loadFromFile();
-					loginScreen();
-				} catch (IOException x) {
-					Alert al = new Alert(AlertType.WARNING);
-					al.setContentText(x.getMessage());
-					al.showAndWait();
-				}
-			}
-		}); // end of load button functionality
-
-		// add all the fields to the HBoxes, then the HBoxes to the VBox
-		line1.getChildren().addAll(createLabel, createField, createButton);
-		line2.getChildren().addAll(loadArea, loadField, loadButton);
-		container.getChildren().addAll(line1, line2);
-
-		return container;
-
-	}
-
-	/**
-	 * Sets up a versatile two input box, with a label followed by a textfield
-	 * not sure why there are two methods tho someone lmk
-	 * 
-	 * @param input1
-	 * @param input2
-	 * @return
-	 */
-	private VBox setUpTwoInputBox(String input1, String input2) {
-		VBox twoInputBox = new VBox();
-
-		HBox box1 = new HBox();
-		// HBox box2 = new HBox();
-
-		// add HBoxes to VBox
-		twoInputBox.getChildren().add(box1);
-		// twoInputBox.getChildren().add(box2);
-
-		// add Labels and TextFields to HBoxes
-		Label inputLabel1 = new Label(input1);
-		TextField field1 = new TextField();
-		// Button button1 = new Button("Done");
-		box1.getChildren().add(inputLabel1);
-		box1.getChildren().add(field1);
-		// box1.getChildren().add(button1);
-
-		Label inputLabel2 = new Label(input2);
-		TextField field2 = new TextField();
-
-		return twoInputBox;
-	}
-
-	/**
-	 * Creates a VBox for logging in
-	 * @return elements of loginbox in a VBox
-	 */
-	public VBox loginBox() {
-		// set up the containers for the login field
-		VBox loginBox = new VBox();
-		HBox line1 = new HBox();
-
-		// sets the fields
-		Label userNameLabel = new Label("Username ");
-		TextField userNameField = new TextField();
-		userNameField.setPromptText("Enter Username Here");
-		Button loginButton = new Button("Login");
-
-		// logs in if the user credential are right
-		loginButton.setOnAction(e -> {
-			// make sure user can't enter empty string as username
-			if (userNameField.getText().length() == 0) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText("Username can't be empty");
-				al.showAndWait();
-			}
-
-			// now make sure that if they're using the login button, that they
-			// exist in the network. If they don't prompt them to create an
-			// account. Prevents null pointers in the user screen
-			else if (!socialNetwork.isAlreadyUser(userNameField.getText())) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText(userNameField.getText()
-						+ " is not registered in the Social_Network_4000. Register below.");
-				al.showAndWait();
-			}
-
-			else {
-				userScreen(userNameField.getText());
-			}
-
-		});
-
-		// add all the elements to the HBox, then the HBox to VBox
-		line1.getChildren().addAll(userNameLabel, userNameField, loginButton);
-		loginBox.getChildren().add(line1);
-
-		return loginBox;
-	}
-
-	/**
-	 * Method to view the login screen with all login screen elements
-	 */
-	public void loginScreen() {
-		BorderPane pane = new BorderPane();
-		Scene loginScene = new Scene(pane, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-		VBox loginBox = loginBox();
-		pane.setCenter(loginBox);
-
-		// Create account button, and set to userScreen
-		Button createAccount = new Button("Create Account");
-
-		// add functionality to button
-		createAccount.setOnAction(e -> {
-			TextInputDialog createDialog = new TextInputDialog();
-			createDialog.setHeaderText(
-					"Enter your name. Must have at least one character");
-
-			GridPane dialogPane = new GridPane(); // pane to add the textfields
-													// to
-			VBox vbox = new VBox(20);
-
-			TextField userName = new TextField(); // make textfields and add
-													// prompt text
-			userName.setPromptText("Enter your name here!");
-
-			vbox.getChildren().add(userName);
-
-			dialogPane.getChildren().add(vbox);
-			createDialog.getDialogPane().setContent(dialogPane);
-
-			// wait for user response and then input it
-			Optional<String> result = createDialog.showAndWait();
-
-			// add user to the network and bring them to the user page
-			if (result.isPresent() && userName.getText().length() != 0) {
-				// so that no duplicates occur
-				if (socialNetwork.isAlreadyUser(userName.getText())) {
-					Alert al = new Alert(AlertType.WARNING);
-					al.setContentText(
-							userName.getText() + " is already a user");
-					al.showAndWait();
-				}
-
-				socialNetwork.addUser(userName.getText());
-				userScreen(userName.getText());
-			}
-
-		});
-		// end of create account button actions
-
-		loginBox.getChildren().add(createAccount);
-
-		// Button to access admin control
-		Button adminButt = new Button("Admin Control");
-		loginBox.getChildren().add(adminButt);
-		adminButt.setOnAction(e -> adminScreen());
-
-		pane.setTop(menuBar());
-
-		stage.setScene(loginScene);
-
-	}
-
-	/**
-	 * Method to view admin screen with all admin screen elements
-	 */
-	private void adminScreen() {
-		BorderPane bp = new BorderPane();
-		Scene adminScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-		bp.setTop(menuBar());
-		VBox options = new VBox();
-		bp.setCenter(options);
-
-		// Hbox to create a button and text fields to view the shortest path
-		// between 2 users
-		HBox box1 = new HBox();
-		Button shortestFriendPath = new Button("Find Shortest Path");
-		box1.getChildren().add(shortestFriendPath);
-		VBox insideBox1 = new VBox();
-		TextField user1 = new TextField();
-		user1.setPromptText("Username 1");
-		insideBox1.getChildren().add(user1);
-		TextField user2 = new TextField();
-		user2.setPromptText("Username 2");
-		insideBox1.getChildren().add(user2);
-		box1.getChildren().add(insideBox1);
-		shortestFriendPath.setOnAction(e -> {
-			// make sure user can't enter empty string as username
-			if (user1.getText().length() == 0
-					|| user2.getText().length() == 0) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText("Usernames can't be empty");
-				al.showAndWait();
-			}
-			// makes sure each user exists in the network
-			else if (!socialNetwork.isAlreadyUser(user1.getText())) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText(user1.getText()
-						+ " is not a registered user in the network.");
-				al.showAndWait();
-			} else if (!socialNetwork.isAlreadyUser(user2.getText())) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText(user2.getText()
-						+ " is not a registered user in the network.");
-				al.showAndWait();
-			} else
-				shortestPath(user1.getText(), user2.getText());
-		});
-		options.getChildren().add(box1);
-
-		// Hbox to create a button and text fields to view mutual friends
-		// between 2 users
-		HBox box2 = new HBox();
-		Button listMutualFriends = new Button("Mutual Friends");
-		box2.getChildren().add(listMutualFriends);
-		VBox insideBox2 = new VBox();
-		TextField userUno = new TextField();
-		userUno.setPromptText("Username 1");
-		insideBox2.getChildren().add(userUno);
-		TextField userDos = new TextField();
-		userDos.setPromptText("Username 2");
-		insideBox2.getChildren().add(userDos);
-		box2.getChildren().add(insideBox2);
-		listMutualFriends.setOnAction(e -> {
-			// make sure user can't enter empty string as username
-			if (userUno.getText().length() == 0
-					|| userDos.getText().length() == 0) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText("Usernames can't be empty");
-				al.showAndWait();
-			}
-			// makes sure each user exists in the network
-			else if (!socialNetwork.isAlreadyUser(userUno.getText())) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText(userUno.getText()
-						+ " is not a registered user in the network.");
-				al.showAndWait();
-			} else if (!socialNetwork.isAlreadyUser(userDos.getText())) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText(userDos.getText()
-						+ " is not a registered user in the network.");
-				al.showAndWait();
-			} else
-				mutualFriend(userUno.getText(), userDos.getText());
-		});
-		options.getChildren().add(box2);
-
-		Button userGraph = new Button("Visualize network");
-		userGraph.setOnAction(e -> startGraph());
-		options.getChildren().add(userGraph);
-
-		// Labels showing view total # of users, connected comp, and friendships
-		Label totalConnections = new Label(
-				"Total Number of Users: "
-						+ socialNetwork.allUsers().size());
-		options.getChildren().add(totalConnections);
-		
-		Label totalComponents = new Label(
-				"Total Number of Connected Components: "
-						+ socialNetwork.getConnectedComponents().size());
-		options.getChildren().add(totalComponents);
-		
-		Label totalFriends = new Label(
-				"Total Number of Friendships: "
-						+ this.totalFriendships);
-		options.getChildren().add(totalFriends);
-		
-		Button backButton = new Button("Back");
-		backButton.setOnAction(e -> loginScreen());
-		bp.setBottom(backButton);
-
-		Button reset = new Button("Reset Network"); // add functionality
-		reset.setOnAction(e -> {
-			this.socialNetwork.resetNetwork();
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setContentText("Social Network has been reset, "
-					+ "all users and friend connections have been removed.");
-			alert.setHeaderText("Network Reset");
-			alert.showAndWait();
-			adminScreen();
-		});
-		options.getChildren().add(reset);
-
-		stage.setScene(adminScreen);
-	}
-
-	/**
-	 * Private helper method to view (in a list) shortest path between 2 users
-	 * 
-	 * @param user1 the starting user of the shortest path
-	 * @param user2 the ending user of the shortest path
-	 */
-	private void shortestPath(String user1, String user2) {
-		HBox bottomBox = new HBox(20); // contains bottom label and back button
-		// Label to display info of shortest path at bottom of pane
-		Label label = new Label(
-				"Shortest path " + "from " + user1 + " to " + user2);
-
-		// Get set of the shortest path
-		List<Person> shortestPath = this.socialNetwork.getShortestPath(user1,
-				user2);
-
-		// ListView to display list of shortest path
-		ListView<String> listPath = new ListView();
-		// iterate through list and add to ListView
-		for (Person p : shortestPath)
-			listPath.getItems().add(p.getName());
-
-		Button backButton = new Button("Back");
-		backButton.setOnAction(e -> adminScreen());
-
-		bottomBox.getChildren().add(backButton);
-		bottomBox.getChildren().add(label);
-		
-		// Adding elements to borderpane
-		BorderPane bp = new BorderPane();
-		bp.setTop(menuBar());
-		bp.setBottom(bottomBox);
-		bp.setCenter(listPath);
-		// Create scene, and set scene
-		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
-		stage.setScene(userScreen);
-	}
-
-	/**
-	 * Private helper method to view total number of users, friends, and
-	 * connected components in social network
-	 */
-	private void viewTotal() {
-		// Vbox to display elements
-		VBox vBox = new VBox();
-
-		// Label to display total number of users
-		Label totalUsers = new Label("Total Number of Users in Network: "
-				+ this.socialNetwork.allUsers().size());
-		vBox.getChildren().add(totalUsers);
-
-		// Adding elements to borderpane
-		BorderPane bp = new BorderPane();
-		bp.setTop(menuBar());
-		bp.setCenter(vBox);
-		// Create scene, and set scene
-		Scene viewTotalScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
-		stage.setScene(viewTotalScreen);
-	}
-
-	/**
-	 * Screen each user see's when they login (correctly)
-	 * 
-	 * @param username of the user
-	 */
-	private void userScreen(String username) {
-		// create label to display username at top
-		Label userLabel = new Label("User: " + username);
-
-		// Create VBox to store elements for userScreen
-		VBox vBox = new VBox();
-		vBox.getChildren().add(userLabel);
-
-		// Create button to view friends
-		Button viewFriends = new Button("View Friends");
-		viewFriends.setOnAction(e -> viewFriendsList(username)); // implement
-		vBox.getChildren().add(viewFriends);
-
-		// Create text field to add a friend
-		HBox friendRequestBox = new HBox();
-		friendRequestBox.getChildren().add(new Label("Add Friend: "));
-		TextField friendRequestText = new TextField();
-		friendRequestBox.getChildren().add(friendRequestText);
-		Button sendButton = new Button("Add");
-		friendRequestBox.getChildren().add(sendButton);
-
-		// send request button functionality
-		sendButton.setOnAction(e -> { // button action to retrieve inputed text
-			String text = friendRequestText.getText();
-			// adds friend to network
-			addFriend(username, text);
-			addFriend(text, username);
-			this.totalFriendships++; //increment number of friendships
-
-			// confirmation so user knows request sent
-			if (this.socialNetwork.isAlreadyUser(text) == true) {
-				Alert al = new Alert(AlertType.CONFIRMATION);
-				al.setContentText("You are now friends with " + text);
-				al.showAndWait();
-				friendRequestText.setText(""); // resets the send request box
-			}
-		});
-
-		vBox.getChildren().add(friendRequestBox);
-
-		// Create text field to remove a friend
-		HBox removeBox = new HBox();
-		removeBox.getChildren().add(new Label("Remove Friend: "));
-		TextField removeText = new TextField();
-		removeBox.getChildren().add(removeText);
-		Button removeButton = new Button("Remove");
-		removeBox.getChildren().add(removeButton);
-		removeButton.setOnAction(e -> { // button action to retrieve inputed
-										// text
-			String text = removeText.getText();
-			removeFriend(username, text);
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setHeaderText("Friend removed");
-			alert.setContentText(text + " is no longer your friend.");
-			alert.showAndWait();
-		});
-		vBox.getChildren().add(removeBox);
-
-		// Create text field to get mutual friends
-		HBox mutualBox = new HBox();
-		mutualBox.getChildren().add(new Label("Mutual Friends: "));
-		TextField mutualText = new TextField();
-		mutualBox.getChildren().add(mutualText);
-		Button mutualButton = new Button("View");
-		mutualBox.getChildren().add(mutualButton);
-
-		mutualButton.setOnAction(e -> { // button action to retrieve inputed
-										// text
-			String text = mutualText.getText();
-
-			// ensures that user can't create null pointer here
-			if (text.length() == 0) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText("Must enter a name to view mutual friends");
-				al.showAndWait();
-			} else {
-				mutualFriend(username, text);
-			}
-		}); // end of mutual friends button functionality
-
-		vBox.getChildren().add(mutualBox);
-
-		// Button to delete acount
-		Button deleteAccount = new Button("DELETE ACCOUNT");
-		deleteAccount.setOnAction(e -> {
-			Alert al = new Alert(AlertType.CONFIRMATION);
-			al.setContentText("Delete account?");
-			
-			// if user confirms, remove user and return to the login screen
-			Optional<ButtonType> resp = al.showAndWait();
-			if (resp.isPresent() && resp.get() == ButtonType.OK) {
-				//removes number of friends from total friendships
-				this.totalFriendships -= 
-						this.socialNetwork.getFriends(username).size();
-				socialNetwork.removeUser(username);
-				loginScreen();
-			}
-		});
-		vBox.getChildren().add(deleteAccount);
-
-		// Adding elements to borderpane
-		BorderPane bp = new BorderPane();
-		// bp.setTop(userLabel);
-		bp.setTop(menuBar());
-		bp.setCenter(vBox);
-
-		// create a back button at the bottom of the screen
-		Button backButton = new Button("Back");
-		backButton.setOnAction(e -> loginScreen());
-		bp.setBottom(backButton);
-
-		// Create scene, and set scene
-		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
-		stage.setScene(userScreen);
-	}
-
-	/**
-	 * Private helper method to view friends of a certain user
-	 * 
-	 * @param username of the user who's friends will be shown
-	 */
-	private void viewFriendsList(String username) {
-		HBox bottomBox = new HBox(20); // Hbox containing bottom text and back
-										// button
-		// create label to display username at bottom
-		Label userLabel = new Label("Friends of: " + username
-				+ "\nDouble Click Friend to View Their Friends");
-
-		// Create a TableView to view friends
-		TableView<Person> friendView = new TableView<>();
-		TableColumn<Person, ?> nameColumn = new TableColumn<>("Name");
-		nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
-		friendView.setPlaceholder(new Label("No friends to display"));
-
-		friendView.getColumns().add(nameColumn);
-
-		// Get Set of user friends from SocialNetwork
-		Set<Person> friends = this.socialNetwork.getFriends(username);
-		// iterate through set and add friends to TableView
-		for (Person p : friends) {
-			friendView.getItems().add(new Person(p.getName()));
-		}
-
-		// Double clicking name will list friends of friend
-		friendView.setRowFactory(tv -> {
-			TableRow row = new TableRow<>();
-			row.setOnMouseClicked(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
-					if (event.getClickCount() == 2 && (!row.isEmpty())) {
-						Person friend = (Person) row.getItem();
-						String friendName = friend.getName();
-						viewFriendsList(friendName);
-					}
-				}
-			});
-			return row;
-		});
-
-		// add a back button
-		Button backButton = new Button("Back");
-		backButton.setOnAction(e -> userScreen(username));
-		bottomBox.getChildren().add(backButton);
-		bottomBox.getChildren().add(userLabel);
-
-		// Adding elements to borderpane
-		BorderPane bp = new BorderPane();
-		bp.setTop(menuBar());
-		bp.setBottom(bottomBox);
-		bp.setCenter(friendView);
-		// Create scene, and set scene
-		Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
-		stage.setScene(userScreen);
-	}
-
-	/**
-	 * Private helper method to send friend request
-	 * 
-	 * @param username   of the user who wants to send the friend request
-	 * @param friendName is the name of the user to send the request to
-	 */
-	private void addFriend(String username, String friendName) {
-		// makes sure friend exists in network
-		if (this.socialNetwork.isAlreadyUser(friendName) == false) {
-			Alert al = new Alert(AlertType.WARNING);
-			al.setContentText(friendName + " is not a user in the network.");
-			al.showAndWait();
-			return;
-		}
-		// create an edge between user and friend
-		this.socialNetwork.addFriends(username, friendName);
-	}
-
-	/**
-	 * Private helper method to remove a friend
-	 * 
-	 * @param username   is the user who's friend will be removed
-	 * @param friendName is the name of the friend to remove
-	 */
-	private void removeFriend(String username, String friendName) {
-		// remove edge from graph
-		this.socialNetwork.removeFriends(username, friendName);
-		this.socialNetwork.removeFriends(friendName, username);
-		this.totalFriendships--; //decrement total number of friendships
-	}
-
-	/**
-	 * Private helper method to view mutual friends
-	 * 
-	 * @param username   of the user
-	 * @param friendName of the user to see which mutual friends are shared
-	 */
-	private void mutualFriend(String username, String friendName) {
-		HBox bottomBox = new HBox(20);
-		// create label to display username at top
-		Label userLabel = new Label(
-				"Mutual Friends of: " + username + " and " + friendName);
-
-		// Create a TableView to view mutual friends
-		TableView<Person> friendView = new TableView();
-		TableColumn<Person, ?> nameColumn = new TableColumn<>("First Name");
-		nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
-		friendView.setPlaceholder(new Label("No mutual friends to display"));
-
-		friendView.getColumns().add(nameColumn);
-
-		// Get Set of mutual friends from SocialNetwork
-		Set<Person> friends = this.socialNetwork.getMutualFriends(username,
-				friendName);
-		// iterate through set and add friends to TableView
-		for (Person p : friends) {
-			friendView.getItems().add(new Person(p.getName()));
-		}
-		
-		Button backButton = new Button("Back");
-		backButton.setOnAction(e -> adminScreen());
-		
-		bottomBox.getChildren().add(backButton);
-		bottomBox.getChildren().add(userLabel);
-
-		// Adding elements to borderpane
-		BorderPane bp = new BorderPane();
-		bp.setTop(menuBar());
-		bp.setBottom(bottomBox);
-		bp.setCenter(friendView);
-		// Create scene, and set scene
-		Scene userScreen1 = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
-		stage.setScene(userScreen1);
-	}
-
-	/*
-	 * Contains save, exit network, sign out
-	 */
-	public MenuBar menuBar() {
-		return setUpMenuBar();
-	}
-
-	/**
-	 * Private helper method to save, exit network, and sign out for menuBar
-	 * 
-	 * @return the MenuBar with all its elements
-	 */
-	private MenuBar setUpMenuBar() {
-		MenuBar menuBar = new MenuBar();
-
-		Menu menu = new Menu("Options");
-
-		// save actions, need to implement the save feature
-		MenuItem save = new MenuItem("Save");
-		save.setOnAction(e -> {
-			try {
-				// Closes if there has been network created
-				if (this.socialNetwork == null) {
-					Platform.exit();
-					System.exit(0);
-				}
-				socialNetwork.saveToFile();
-			} catch (IOException x) {
-				System.err.println("Error saving to file.");
-			}
-			// Just save, don't prompt or anything
-
-		});
-
-		MenuItem load = new MenuItem("Load");
-		load.setOnAction(e -> {
-			TextInputDialog loadFile = new TextInputDialog();
-			loadFile.setHeaderText("Type in file to load!");
-
-			// user input for the file to be loaded
-			Optional<String> resp = loadFile.showAndWait();
-
-			// ensure text input has at least one character
-			if (resp.get().length() == 0) {
-				Alert al = new Alert(AlertType.WARNING);
-				al.setContentText(
-						"File to load must have at least one character");
-				al.showAndWait();
-			}
-
-			// append .txt to the end of string if the user didn't
-			else if (!resp.get().contains(".txt")) {
-				this.socialNetwork = new SocialNetwork(resp.get() + ".txt");
-				try {
-					socialNetwork.loadFromFile();
-				} catch (IOException x) {
-					System.err.println(x.getMessage());
-				}
-			}
-
-			// nothing needs to be done to modify the string
-			else {
-				this.socialNetwork = new SocialNetwork(resp.get());
-				try {
-					socialNetwork.loadFromFile();
-				} catch (IOException x) {
-					System.err.println(x.getMessage());
-				}
-			}
-
-		});
-
-		// exit button prompts user to save
-		MenuItem exit = new MenuItem("Exit");
-		exit.setOnAction(e -> {
-			Alert al = new Alert(AlertType.NONE, "Save? ", ButtonType.YES,
-					ButtonType.NO, ButtonType.CANCEL);
-			Optional<ButtonType> result = al.showAndWait();
-			if (result.get() == ButtonType.YES) {
-				save.fire(); // calls save.getOnAction
-				Platform.exit();
-			} else if (result.get() == ButtonType.NO) {
-				Platform.exit();
-			} else if (result.get() == ButtonType.CANCEL) {
-				al.close();
-			}
-
-		});
-
-		// MenuItem to sign out of current user
-		MenuItem signOut = new MenuItem("Sign out");
-		signOut.setOnAction(e -> {
-			// makes sure social network has been created before entering login
-			if (this.socialNetwork == null) {
-				Alert alert = new Alert(AlertType.WARNING);
-				alert.setContentText(
-						"Must create network before " + "trying to sign out.");
-				alert.showAndWait();
-			} else
-				loginScreen();
-		});
-
-		menu.getItems().addAll(save, load, exit, signOut);
-
-		//Help Box
-		Label help = new Label("Help/Info");
-		help.setOnMouseClicked(e -> {
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setHeaderText("Help & Information");
-			alert.setContentText(
-					"Welcome to Social Network 4000."
-					+ "\n\nYou can either create a new network, or "
-					+ "load one from a file."
-					+ "\n\nThen, you can create a new account, or login to an "
-					+ "existing one."
-					+ "\n\nOnce logged in, you can add, remove, and view friends."
-					+ "\n\nThe admin control allows you to do things such as view"
-					+ " the entire network, mutual friends, and shortest friend path."
-					+ "\n\nEnjoy the network!");
-			alert.showAndWait();
-		});
-		Menu helpBar = new Menu("", help);
-		
-		Menu pages = new Menu("Pages");
-
-		MenuItem origPage = new MenuItem("Create/Load Screen");
-		origPage.setOnAction(e -> firstPage());
-
-		MenuItem loginScreen = new MenuItem("Login Screen");
-		loginScreen.setOnAction(e -> {
-			// makes sure social network has been created before entering login
-			if (this.socialNetwork == null) {
-				Alert alert = new Alert(AlertType.WARNING);
-				alert.setContentText(
-						"Must create network before " + "trying to login.");
-				alert.showAndWait();
-			} else
-				loginScreen();
-		});
-
-		pages.getItems().addAll(origPage, loginScreen);
-
-		menuBar.getMenus().add(menu);
-		menuBar.getMenus().add(pages);
-		menuBar.getMenus().add(helpBar);
-		return menuBar;
-	}
-
-	/**
-	 * Canvas to view the visualization of the Social Network
-	 * @return starting Canvas
-	 */
-	private Canvas startGraph() {
-		BorderPane bp = new BorderPane();
-		Scene graphScene = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT - 50);
-		Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
-		GraphicsContext gc = canvas.getGraphicsContext2D();
-		drawGraph(gc);
-
-		Button backButton = new Button("Back");
-		backButton.setOnAction(e -> adminScreen());
-		bp.getChildren().add(canvas);
-		bp.setBottom(backButton);
-		stage.setScene(graphScene);
-
-		return canvas;
-	}
-
-	/**
-	 * Drawing graph
-	 * @param gc to use for drawGraph
-	 */
-	private void drawGraph(GraphicsContext gc) {
-		int numUsers = socialNetwork.allUsers().size(); // get numusers so
-														// spacing is easier
-
-		// find smallest n*n or n*(n-1) which is larger than numUsers
-		int numSquares = 1; // numSquares = x*y
-		int x = 1;
-		int y = 1;
-
-		while (numSquares < numUsers) {
-			if (x % 2 == 1) { // so every two steps
-				x++;
-			} else {
-				y++;
-			}
-			numSquares = x * y; // should go like: 1, 2, 4, 6, 9, 12, ...
-		}
-
-		// now have to get even spacing on x and y -> WINDOW_WIDTH / x, HEIGHT /
-		// y
-		int spaceX = WINDOW_WIDTH / x;
-		int spaceY = WINDOW_HEIGHT / y;
-
-		// divide each by 2 to get the center square for beginning node
-		double xPos = spaceX / 2;
-		double yPos = spaceY / 2;
-		// initial value saved so that can return to the proper xVal when
-		// changing y
-		double initX = xPos;
-
-		// store the coordinates of each user inside a hash map
-		HashMap<Person, double[]> coordMap = new HashMap<>();
-
-		// add the nodes
-		for (Person p : socialNetwork.allUsers()) {
-			// we have to fix our null pointers
-			if (p == null) {
-				continue;
-			}
-			drawNode(gc, p.getName(), xPos, yPos);
-			xPos += spaceX; // increment to middle of next area
-
-			if (xPos > WINDOW_WIDTH) {
-				xPos = initX; // reset x and increment y
-				yPos += spaceY;
-			}
-
-			double[] coords = { xPos, yPos };
-			coordMap.put(p, coords); // associate the coordinates with a person
-		}
-
-		// now add edges
-		// get all the friends of each person
-		for (Person p1 : socialNetwork.allUsers()) {
-			double[] p1Coords = coordMap.get(p1);
-			if (p1 == null) {
-				continue;
-			}
-			for (Person p2 : socialNetwork.getFriends(p1.getName())) {
-				if (p2 == null) {
-					continue;
-				}
-				double[] p2Coords = coordMap.get(p2);
-				if (p2Coords == null) {
-					continue;
-				}
-				drawEdge(gc, p1Coords[0], p1Coords[1], p2Coords[0],
-						p2Coords[1]);
-			}
-		}
-	}
-
-	/**
-	 * Drawing node
-	 * @param gc to use
-	 * @param name of node 
-	 * @param x coordinate
-	 * @param y coordinate
-	 */
-	private void drawNode(GraphicsContext gc, String name, double x, double y) {
-		gc.setFill(Color.RED);
-		gc.fillOval(x, y, 50, 50);
-		gc.setFill(Color.BLACK);
-		gc.strokeText(name, x, y);
-	}
-
-	/**
-	 * Drawing edge
-	 * @param gc to use
-	 * @param x1 coordinate
-	 * @param y1 coordinate
-	 * @param x2 coordinate (ending)
-	 * @param y2 coordinate (ending)////
-	 */
-	private void drawEdge(GraphicsContext gc, double x1, double y1, double x2,
-			double y2) {
-		gc.setFill(Color.BLACK);
-		gc.strokeLine(x1, y1, x2, y2);
-
-	}
-
-	/**
-	 * Main method to launch
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		launch(args);
-	}
+    private final int WINDOW_HEIGHT = 500; // window height (pixels)
+    private final int WINDOW_WIDTH = 500; // window width(pixels)
+    private final String APP_NAME = "Social Network 4000"; // app title
+    private Stage stage; // default primary stage
+    private SocialNetwork socialNetwork; // create SocialNetwork to use
+    private int totalFriendships; // total number of friendships counter
+
+    /**
+     * Default start window when GUI is first run Contains saving, creating a
+     * network, and loading a network
+     */
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        BorderPane root = new BorderPane();
+        this.stage = primaryStage;
+        // starts with the load/create file scene
+        // user can load, create, save, or exit program
+        Scene loadScene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        // contains the elements at the top of the page: title, save button
+
+        VBox topBox = new VBox();
+        topBox.getChildren().add(menuBar());
+
+        Label title = new Label(APP_NAME); // creates new title
+        topBox.getChildren().add(title);
+
+        root.setTop(topBox);
+
+        VBox makeNetwork = createOrLoadNetwork();
+        root.setCenter(makeNetwork);
+
+        // add components to the GUI
+        primaryStage.setTitle(APP_NAME);
+        primaryStage.setScene(loadScene);
+        primaryStage.show();
+    }
+
+    /**
+     * Used this method so we can recall the first page, without needing try
+     * catch blocks everywhere
+     */
+    private void firstPage() {
+        try {
+            start(stage);
+        } catch (Exception e) {
+            System.err.println("ya dunn fucked up");
+        }
+    }
+
+    /**
+     * Loads a new or existing social network
+     * 
+     * @return
+     */
+    public SocialNetwork socialNetwork() {
+
+        return null;
+    }
+
+    /**
+     * Method to make a two input VBox
+     * 
+     * @param input1
+     * @param input2
+     * @return the Vbox
+     */
+    public VBox twoInputBox(String input1, String input2) {
+        VBox twoInputBox = setUpTwoInputBox(input1, input2);
+        return twoInputBox;
+    }
+
+    /**
+     * Method to create the load and create fields that the user is greeted with
+     * 
+     * @return VBox to create/load a network
+     */
+    private VBox createOrLoadNetwork() {
+        VBox container = new VBox();
+        HBox line1 = new HBox();
+        HBox line2 = new HBox();
+
+        // The whole create area
+        Label createLabel = new Label("Create network: ");
+        TextField createField = new TextField();
+        createField.setPromptText("Enter as .txt");
+
+        Button createButton = new Button("Create");
+        createButton.setOnAction(e -> {
+            // invalid input, text length = 1
+            if (createField.getText().length() == 0) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText(
+                        "File must have at least one character. Try again.");
+                al.showAndWait();
+            }
+
+            // valid input. First block appends .txt if user didn't type it in
+            else if (createField.getText().contains(".txt")) {
+                this.socialNetwork = new SocialNetwork(createField.getText());
+                loginScreen();
+            } else {
+                this.socialNetwork =
+                        new SocialNetwork(createField.getText() + ".txt");
+                loginScreen();
+            }
+        }); // end of create button functionality
+
+        // load field and associated actions
+        Label loadArea = new Label("Load network: ");
+        TextField loadField = new TextField();
+        loadField.setPromptText("MUST enter as a .txt file");
+
+        Button loadButton = new Button("Load");
+        loadButton.setOnAction(e -> {
+            // if invalid input
+            if (!loadField.getText().contains(".txt")) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText("Invalid input, must end in .txt");
+                al.showAndWait();
+            } else {
+                try {
+                    this.socialNetwork = new SocialNetwork(loadField.getText());
+                    socialNetwork.loadFromFile();
+                    loginScreen();
+                } catch (IOException x) {
+                    Alert al = new Alert(AlertType.WARNING);
+                    al.setContentText(x.getMessage());
+                    al.showAndWait();
+                }
+            }
+        }); // end of load button functionality
+
+        // add all the fields to the HBoxes, then the HBoxes to the VBox
+        line1.getChildren().addAll(createLabel, createField, createButton);
+        line2.getChildren().addAll(loadArea, loadField, loadButton);
+        container.getChildren().addAll(line1, line2);
+
+        return container;
+
+    }
+
+    /**
+     * Sets up a versatile two input box, with a label followed by a textfield
+     * not sure why there are two methods tho someone lmk
+     * 
+     * @param input1
+     * @param input2
+     * @return
+     */
+    private VBox setUpTwoInputBox(String input1, String input2) {
+        VBox twoInputBox = new VBox();
+
+        HBox box1 = new HBox();
+        // HBox box2 = new HBox();
+
+        // add HBoxes to VBox
+        twoInputBox.getChildren().add(box1);
+        // twoInputBox.getChildren().add(box2);
+
+        // add Labels and TextFields to HBoxes
+        Label inputLabel1 = new Label(input1);
+        TextField field1 = new TextField();
+        // Button button1 = new Button("Done");
+        box1.getChildren().add(inputLabel1);
+        box1.getChildren().add(field1);
+        // box1.getChildren().add(button1);
+
+        Label inputLabel2 = new Label(input2);
+        TextField field2 = new TextField();
+
+        return twoInputBox;
+    }
+
+    /**
+     * Creates a VBox for logging in
+     * 
+     * @return elements of loginbox in a VBox
+     */
+    public VBox loginBox() {
+        // set up the containers for the login field
+        VBox loginBox = new VBox();
+        HBox line1 = new HBox();
+
+        // sets the fields
+        Label userNameLabel = new Label("Username ");
+        TextField userNameField = new TextField();
+        userNameField.setPromptText("Enter Username Here");
+        Button loginButton = new Button("Login");
+
+        // logs in if the user credential are right
+        loginButton.setOnAction(e -> {
+            // make sure user can't enter empty string as username
+            if (userNameField.getText().length() == 0) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText("Username can't be empty");
+                al.showAndWait();
+            }
+
+            // now make sure that if they're using the login button, that they
+            // exist in the network. If they don't prompt them to create an
+            // account. Prevents null pointers in the user screen
+            else if (!socialNetwork.isAlreadyUser(userNameField.getText())) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText(userNameField.getText()
+                        + " is not registered in the Social_Network_4000. Register below.");
+                al.showAndWait();
+            }
+
+            else {
+                userScreen(userNameField.getText());
+            }
+
+        });
+
+        // add all the elements to the HBox, then the HBox to VBox
+        line1.getChildren().addAll(userNameLabel, userNameField, loginButton);
+        loginBox.getChildren().add(line1);
+
+        return loginBox;
+    }
+
+    /**
+     * Method to view the login screen with all login screen elements
+     */
+    public void loginScreen() {
+        BorderPane pane = new BorderPane();
+        Scene loginScene = new Scene(pane, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        VBox loginBox = loginBox();
+        pane.setCenter(loginBox);
+
+        // Create account button, and set to userScreen
+        Button createAccount = new Button("Create Account");
+
+        // add functionality to button
+        createAccount.setOnAction(e -> {
+            TextInputDialog createDialog = new TextInputDialog();
+            createDialog.setHeaderText(
+                    "Enter your name. Must have at least one character");
+
+            GridPane dialogPane = new GridPane(); // pane to add the textfields
+                                                  // to
+            VBox vbox = new VBox(20);
+
+            TextField userName = new TextField(); // make textfields and add
+                                                  // prompt text
+            userName.setPromptText("Enter your name here!");
+
+            vbox.getChildren().add(userName);
+
+            dialogPane.getChildren().add(vbox);
+            createDialog.getDialogPane().setContent(dialogPane);
+
+            // wait for user response and then input it
+            Optional<String> result = createDialog.showAndWait();
+
+            // add user to the network and bring them to the user page
+            if (result.isPresent() && userName.getText().length() != 0) {
+                // so that no duplicates occur
+                if (socialNetwork.isAlreadyUser(userName.getText())) {
+                    Alert al = new Alert(AlertType.WARNING);
+                    al.setContentText(
+                            userName.getText() + " is already a user");
+                    al.showAndWait();
+                }
+
+                socialNetwork.addUser(userName.getText());
+                userScreen(userName.getText());
+            }
+
+        });
+        // end of create account button actions
+
+        loginBox.getChildren().add(createAccount);
+
+        // Button to access admin control
+        Button adminButt = new Button("Admin Control");
+        loginBox.getChildren().add(adminButt);
+        adminButt.setOnAction(e -> adminScreen());
+
+        pane.setTop(menuBar());
+
+        stage.setScene(loginScene);
+
+    }
+
+    /**
+     * Method to view admin screen with all admin screen elements
+     */
+    private void adminScreen() {
+        BorderPane bp = new BorderPane();
+        Scene adminScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        bp.setTop(menuBar());
+        VBox options = new VBox();
+        bp.setCenter(options);
+
+        // Hbox to create a button and text fields to view the shortest path
+        // between 2 users
+        HBox box1 = new HBox();
+        Button shortestFriendPath = new Button("Find Shortest Path");
+        box1.getChildren().add(shortestFriendPath);
+        VBox insideBox1 = new VBox();
+        TextField user1 = new TextField();
+        user1.setPromptText("Username 1");
+        insideBox1.getChildren().add(user1);
+        TextField user2 = new TextField();
+        user2.setPromptText("Username 2");
+        insideBox1.getChildren().add(user2);
+        box1.getChildren().add(insideBox1);
+        shortestFriendPath.setOnAction(e -> {
+            // make sure user can't enter empty string as username
+            if (user1.getText().length() == 0
+                    || user2.getText().length() == 0) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText("Usernames can't be empty");
+                al.showAndWait();
+            }
+            // makes sure each user exists in the network
+            else if (!socialNetwork.isAlreadyUser(user1.getText())) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText(user1.getText()
+                        + " is not a registered user in the network.");
+                al.showAndWait();
+            } else if (!socialNetwork.isAlreadyUser(user2.getText())) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText(user2.getText()
+                        + " is not a registered user in the network.");
+                al.showAndWait();
+            } else
+                shortestPath(user1.getText(), user2.getText());
+        });
+        options.getChildren().add(box1);
+
+        // Hbox to create a button and text fields to view mutual friends
+        // between 2 users
+        HBox box2 = new HBox();
+        Button listMutualFriends = new Button("Mutual Friends");
+        box2.getChildren().add(listMutualFriends);
+        VBox insideBox2 = new VBox();
+        TextField userUno = new TextField();
+        userUno.setPromptText("Username 1");
+        insideBox2.getChildren().add(userUno);
+        TextField userDos = new TextField();
+        userDos.setPromptText("Username 2");
+        insideBox2.getChildren().add(userDos);
+        box2.getChildren().add(insideBox2);
+        listMutualFriends.setOnAction(e -> {
+            // make sure user can't enter empty string as username
+            if (userUno.getText().length() == 0
+                    || userDos.getText().length() == 0) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText("Usernames can't be empty");
+                al.showAndWait();
+            }
+            // makes sure each user exists in the network
+            else if (!socialNetwork.isAlreadyUser(userUno.getText())) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText(userUno.getText()
+                        + " is not a registered user in the network.");
+                al.showAndWait();
+            } else if (!socialNetwork.isAlreadyUser(userDos.getText())) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText(userDos.getText()
+                        + " is not a registered user in the network.");
+                al.showAndWait();
+            } else
+                mutualFriend(userUno.getText(), userDos.getText());
+        });
+        options.getChildren().add(box2);
+
+        Button userGraph = new Button("Visualize network");
+        userGraph.setOnAction(e -> startGraph());
+        options.getChildren().add(userGraph);
+
+        // Labels showing view total # of users, connected comp, and friendships
+        Label totalConnections = new Label(
+                "Total Number of Users: " + socialNetwork.allUsers().size());
+        options.getChildren().add(totalConnections);
+
+        Label totalComponents =
+                new Label("Total Number of Connected Components: "
+                        + socialNetwork.getConnectedComponents().size());
+        options.getChildren().add(totalComponents);
+
+        Label totalFriends = new Label(
+                "Total Number of Friendships: " + this.totalFriendships);
+        options.getChildren().add(totalFriends);
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(e -> loginScreen());
+        bp.setBottom(backButton);
+
+        Button reset = new Button("Reset Network"); // add functionality
+        reset.setOnAction(e -> {
+            this.socialNetwork.resetNetwork();
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setContentText("Social Network has been reset, "
+                    + "all users and friend connections have been removed.");
+            alert.setHeaderText("Network Reset");
+            alert.showAndWait();
+            adminScreen();
+        });
+        options.getChildren().add(reset);
+
+        stage.setScene(adminScreen);
+    }
+
+    /**
+     * Private helper method to view (in a list) shortest path between 2 users
+     * 
+     * @param user1 the starting user of the shortest path
+     * @param user2 the ending user of the shortest path
+     */
+    private void shortestPath(String user1, String user2) {
+        HBox bottomBox = new HBox(20); // contains bottom label and back button
+        // Label to display info of shortest path at bottom of pane
+        Label label =
+                new Label("Shortest path " + "from " + user1 + " to " + user2);
+
+        // Get set of the shortest path
+        List<Person> shortestPath =
+                this.socialNetwork.getShortestPath(user1, user2);
+
+        // Checks if there actually is a connection between the two users and
+        // sends a message if there is not
+        if (shortestPath == null) {
+            Alert noPath = new Alert(AlertType.INFORMATION);
+            noPath.setHeaderText("Error");
+            noPath.setContentText("There is no path that connects " + user1
+                    + " and " + user2 + ".");
+            noPath.showAndWait();
+            return;
+        }
+
+        // ListView to display list of shortest path
+        ListView<String> listPath = new ListView();
+        // iterate through list and add to ListView
+        for (Person p : shortestPath)
+            listPath.getItems().add(p.getName());
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(e -> adminScreen());
+
+        bottomBox.getChildren().add(backButton);
+        bottomBox.getChildren().add(label);
+
+        // Adding elements to borderpane
+        BorderPane bp = new BorderPane();
+        bp.setTop(menuBar());
+        bp.setBottom(bottomBox);
+        bp.setCenter(listPath);
+        // Create scene, and set scene
+        Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+        stage.setScene(userScreen);
+    }
+
+    /**
+     * Private helper method to view total number of users, friends, and
+     * connected components in social network
+     */
+    private void viewTotal() {
+        // Vbox to display elements
+        VBox vBox = new VBox();
+
+        // Label to display total number of users
+        Label totalUsers = new Label("Total Number of Users in Network: "
+                + this.socialNetwork.allUsers().size());
+        vBox.getChildren().add(totalUsers);
+
+        // Adding elements to borderpane
+        BorderPane bp = new BorderPane();
+        bp.setTop(menuBar());
+        bp.setCenter(vBox);
+        // Create scene, and set scene
+        Scene viewTotalScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+        stage.setScene(viewTotalScreen);
+    }
+
+    /**
+     * Screen each user see's when they login (correctly)
+     * 
+     * @param username of the user
+     */
+    private void userScreen(String username) {
+        // create label to display username at top
+        Label userLabel = new Label("User: " + username);
+
+        // Create VBox to store elements for userScreen
+        VBox vBox = new VBox();
+        vBox.getChildren().add(userLabel);
+
+        // Create button to view friends
+        Button viewFriends = new Button("View Friends");
+        viewFriends.setOnAction(e -> viewFriendsList(username)); // implement
+        vBox.getChildren().add(viewFriends);
+
+        // Create text field to add a friend
+        HBox friendRequestBox = new HBox();
+        friendRequestBox.getChildren().add(new Label("Add Friend: "));
+        TextField friendRequestText = new TextField();
+        friendRequestBox.getChildren().add(friendRequestText);
+        Button sendButton = new Button("Add");
+        friendRequestBox.getChildren().add(sendButton);
+
+        // send request button functionality
+        sendButton.setOnAction(e -> { // button action to retrieve inputed text
+            String text = friendRequestText.getText();
+            // adds friend to network
+            addFriend(username, text);
+            addFriend(text, username);
+            this.totalFriendships++; // increment number of friendships
+
+            // confirmation so user knows request sent
+            if (this.socialNetwork.isAlreadyUser(text) == true) {
+                Alert al = new Alert(AlertType.CONFIRMATION);
+                al.setContentText("You are now friends with " + text);
+                al.showAndWait();
+                friendRequestText.setText(""); // resets the send request box
+            }
+        });
+
+        vBox.getChildren().add(friendRequestBox);
+
+        // Create text field to remove a friend
+        HBox removeBox = new HBox();
+        removeBox.getChildren().add(new Label("Remove Friend: "));
+        TextField removeText = new TextField();
+        removeBox.getChildren().add(removeText);
+        Button removeButton = new Button("Remove");
+        removeBox.getChildren().add(removeButton);
+        removeButton.setOnAction(e -> { // button action to retrieve inputed
+                                        // text
+            String text = removeText.getText();
+            removeFriend(username, text);
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setHeaderText("Friend removed");
+            alert.setContentText(text + " is no longer your friend.");
+            alert.showAndWait();
+        });
+        vBox.getChildren().add(removeBox);
+
+        // Create text field to get mutual friends
+        HBox mutualBox = new HBox();
+        mutualBox.getChildren().add(new Label("Mutual Friends: "));
+        TextField mutualText = new TextField();
+        mutualBox.getChildren().add(mutualText);
+        Button mutualButton = new Button("View");
+        mutualBox.getChildren().add(mutualButton);
+
+        mutualButton.setOnAction(e -> { // button action to retrieve inputed
+                                        // text
+            String text = mutualText.getText();
+
+            // ensures that user can't create null pointer here
+            if (text.length() == 0) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText("Must enter a name to view mutual friends");
+                al.showAndWait();
+            } else {
+                mutualFriend(username, text);
+            }
+        }); // end of mutual friends button functionality
+
+        vBox.getChildren().add(mutualBox);
+
+        // Button to delete acount
+        Button deleteAccount = new Button("DELETE ACCOUNT");
+        deleteAccount.setOnAction(e -> {
+            Alert al = new Alert(AlertType.CONFIRMATION);
+            al.setContentText("Delete account?");
+
+            // if user confirms, remove user and return to the login screen
+            Optional<ButtonType> resp = al.showAndWait();
+            if (resp.isPresent() && resp.get() == ButtonType.OK) {
+                // removes number of friends from total friendships
+                this.totalFriendships -=
+                        this.socialNetwork.getFriends(username).size();
+                socialNetwork.removeUser(username);
+                loginScreen();
+            }
+        });
+        vBox.getChildren().add(deleteAccount);
+
+        // Adding elements to borderpane
+        BorderPane bp = new BorderPane();
+        // bp.setTop(userLabel);
+        bp.setTop(menuBar());
+        bp.setCenter(vBox);
+
+        // create a back button at the bottom of the screen
+        Button backButton = new Button("Back");
+        backButton.setOnAction(e -> loginScreen());
+        bp.setBottom(backButton);
+
+        // Create scene, and set scene
+        Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+        stage.setScene(userScreen);
+    }
+
+    /**
+     * Private helper method to view friends of a certain user
+     * 
+     * @param username of the user who's friends will be shown
+     */
+    private void viewFriendsList(String username) {
+        HBox bottomBox = new HBox(20); // Hbox containing bottom text and back
+                                       // button
+        // create label to display username at bottom
+        Label userLabel = new Label("Friends of: " + username
+                + "\nDouble Click Friend to View Their Friends");
+
+        // Create a TableView to view friends
+        TableView<Person> friendView = new TableView<>();
+        TableColumn<Person, ?> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
+        friendView.setPlaceholder(new Label("No friends to display"));
+
+        friendView.getColumns().add(nameColumn);
+
+        // Get Set of user friends from SocialNetwork
+        Set<Person> friends = this.socialNetwork.getFriends(username);
+        // iterate through set and add friends to TableView
+        for (Person p : friends) {
+            friendView.getItems().add(new Person(p.getName()));
+        }
+
+        // Double clicking name will list friends of friend
+        friendView.setRowFactory(tv -> {
+            TableRow row = new TableRow<>();
+            row.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                        Person friend = (Person) row.getItem();
+                        String friendName = friend.getName();
+                        viewFriendsList(friendName);
+                    }
+                }
+            });
+            return row;
+        });
+
+        // add a back button
+        Button backButton = new Button("Back");
+        backButton.setOnAction(e -> userScreen(username));
+        bottomBox.getChildren().add(backButton);
+        bottomBox.getChildren().add(userLabel);
+
+        // Adding elements to borderpane
+        BorderPane bp = new BorderPane();
+        bp.setTop(menuBar());
+        bp.setBottom(bottomBox);
+        bp.setCenter(friendView);
+        // Create scene, and set scene
+        Scene userScreen = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+        stage.setScene(userScreen);
+    }
+
+    /**
+     * Private helper method to send friend request
+     * 
+     * @param username   of the user who wants to send the friend request
+     * @param friendName is the name of the user to send the request to
+     */
+    private void addFriend(String username, String friendName) {
+        // makes sure friend exists in network
+        if (this.socialNetwork.isAlreadyUser(friendName) == false) {
+            Alert al = new Alert(AlertType.WARNING);
+            al.setContentText(friendName + " is not a user in the network.");
+            al.showAndWait();
+            return;
+        }
+        // create an edge between user and friend
+        this.socialNetwork.addFriends(username, friendName);
+    }
+
+    /**
+     * Private helper method to remove a friend
+     * 
+     * @param username   is the user who's friend will be removed
+     * @param friendName is the name of the friend to remove
+     */
+    private void removeFriend(String username, String friendName) {
+        // remove edge from graph
+        this.socialNetwork.removeFriends(username, friendName);
+        this.socialNetwork.removeFriends(friendName, username);
+        this.totalFriendships--; // decrement total number of friendships
+    }
+
+    /**
+     * Private helper method to view mutual friends
+     * 
+     * @param username   of the user
+     * @param friendName of the user to see which mutual friends are shared
+     */
+    private void mutualFriend(String username, String friendName) {
+        HBox bottomBox = new HBox(20);
+        // create label to display username at top
+        Label userLabel = new Label(
+                "Mutual Friends of: " + username + " and " + friendName);
+
+        // Create a TableView to view mutual friends
+        TableView<Person> friendView = new TableView();
+        TableColumn<Person, ?> nameColumn = new TableColumn<>("First Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
+        friendView.setPlaceholder(new Label("No mutual friends to display"));
+
+        friendView.getColumns().add(nameColumn);
+
+        // Get Set of mutual friends from SocialNetwork
+        Set<Person> friends =
+                this.socialNetwork.getMutualFriends(username, friendName);
+        // iterate through set and add friends to TableView
+        for (Person p : friends) {
+            friendView.getItems().add(new Person(p.getName()));
+        }
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(e -> adminScreen());
+
+        bottomBox.getChildren().add(backButton);
+        bottomBox.getChildren().add(userLabel);
+
+        // Adding elements to borderpane
+        BorderPane bp = new BorderPane();
+        bp.setTop(menuBar());
+        bp.setBottom(bottomBox);
+        bp.setCenter(friendView);
+        // Create scene, and set scene
+        Scene userScreen1 = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+        stage.setScene(userScreen1);
+    }
+
+    /*
+     * Contains save, exit network, sign out
+     */
+    public MenuBar menuBar() {
+        return setUpMenuBar();
+    }
+
+    /**
+     * Private helper method to save, exit network, and sign out for menuBar
+     * 
+     * @return the MenuBar with all its elements
+     */
+    private MenuBar setUpMenuBar() {
+        MenuBar menuBar = new MenuBar();
+
+        Menu menu = new Menu("Options");
+
+        // save actions, need to implement the save feature
+        MenuItem save = new MenuItem("Save");
+        save.setOnAction(e -> {
+            try {
+                // Closes if there has been network created
+                if (this.socialNetwork == null) {
+                    Platform.exit();
+                    System.exit(0);
+                }
+                socialNetwork.saveToFile();
+            } catch (IOException x) {
+                System.err.println("Error saving to file.");
+            }
+            // Just save, don't prompt or anything
+
+        });
+
+        MenuItem load = new MenuItem("Load");
+        load.setOnAction(e -> {
+            TextInputDialog loadFile = new TextInputDialog();
+            loadFile.setHeaderText("Type in file to load!");
+
+            // user input for the file to be loaded
+            Optional<String> resp = loadFile.showAndWait();
+
+            // ensure text input has at least one character
+            if (resp.get().length() == 0) {
+                Alert al = new Alert(AlertType.WARNING);
+                al.setContentText(
+                        "File to load must have at least one character");
+                al.showAndWait();
+            }
+
+            // append .txt to the end of string if the user didn't
+            else if (!resp.get().contains(".txt")) {
+                this.socialNetwork = new SocialNetwork(resp.get() + ".txt");
+                try {
+                    socialNetwork.loadFromFile();
+                } catch (IOException x) {
+                    System.err.println(x.getMessage());
+                }
+            }
+
+            // nothing needs to be done to modify the string
+            else {
+                this.socialNetwork = new SocialNetwork(resp.get());
+                try {
+                    socialNetwork.loadFromFile();
+                } catch (IOException x) {
+                    System.err.println(x.getMessage());
+                }
+            }
+
+        });
+
+        // exit button prompts user to save
+        MenuItem exit = new MenuItem("Exit");
+        exit.setOnAction(e -> {
+            Alert al = new Alert(AlertType.NONE, "Save? ", ButtonType.YES,
+                    ButtonType.NO, ButtonType.CANCEL);
+            Optional<ButtonType> result = al.showAndWait();
+            if (result.get() == ButtonType.YES) {
+                save.fire(); // calls save.getOnAction
+                Platform.exit();
+            } else if (result.get() == ButtonType.NO) {
+                Platform.exit();
+            } else if (result.get() == ButtonType.CANCEL) {
+                al.close();
+            }
+
+        });
+
+        // MenuItem to sign out of current user
+        MenuItem signOut = new MenuItem("Sign out");
+        signOut.setOnAction(e -> {
+            // makes sure social network has been created before entering login
+            if (this.socialNetwork == null) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setContentText(
+                        "Must create network before " + "trying to sign out.");
+                alert.showAndWait();
+            } else
+                loginScreen();
+        });
+
+        menu.getItems().addAll(save, load, exit, signOut);
+
+        // Help Box
+        Label help = new Label("Help/Info");
+        help.setOnMouseClicked(e -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setHeaderText("Help & Information");
+            alert.setContentText("Welcome to Social Network 4000."
+                    + "\n\nYou can either create a new network, or "
+                    + "load one from a file."
+                    + "\n\nThen, you can create a new account, or login to an "
+                    + "existing one."
+                    + "\n\nOnce logged in, you can add, remove, and view friends."
+                    + "\n\nThe admin control allows you to do things such as view"
+                    + " the entire network, mutual friends, and shortest friend path."
+                    + "\n\nEnjoy the network!");
+            alert.showAndWait();
+        });
+        Menu helpBar = new Menu("", help);
+
+        Menu pages = new Menu("Pages");
+
+        MenuItem origPage = new MenuItem("Create/Load Screen");
+        origPage.setOnAction(e -> firstPage());
+
+        MenuItem loginScreen = new MenuItem("Login Screen");
+        loginScreen.setOnAction(e -> {
+            // makes sure social network has been created before entering login
+            if (this.socialNetwork == null) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setContentText(
+                        "Must create network before " + "trying to login.");
+                alert.showAndWait();
+            } else
+                loginScreen();
+        });
+
+        pages.getItems().addAll(origPage, loginScreen);
+
+        menuBar.getMenus().add(menu);
+        menuBar.getMenus().add(pages);
+        menuBar.getMenus().add(helpBar);
+        return menuBar;
+    }
+
+    /**
+     * Canvas to view the visualization of the Social Network
+     * 
+     * @return starting Canvas
+     */
+    private Canvas startGraph() {
+        BorderPane bp = new BorderPane();
+        Scene graphScene = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT - 50);
+        Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        drawGraph(gc);
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(e -> adminScreen());
+        bp.getChildren().add(canvas);
+        bp.setBottom(backButton);
+        stage.setScene(graphScene);
+
+        return canvas;
+    }
+
+    /**
+     * Drawing graph
+     * 
+     * @param gc to use for drawGraph
+     */
+    private void drawGraph(GraphicsContext gc) {
+        int numUsers = socialNetwork.allUsers().size(); // get numusers so
+                                                        // spacing is easier
+
+        // find smallest n*n or n*(n-1) which is larger than numUsers
+        int numSquares = 1; // numSquares = x*y
+        int x = 1;
+        int y = 1;
+
+        while (numSquares < numUsers) {
+            if (x % 2 == 1) { // so every two steps
+                x++;
+            } else {
+                y++;
+            }
+            numSquares = x * y; // should go like: 1, 2, 4, 6, 9, 12, ...
+        }
+
+        // now have to get even spacing on x and y -> WINDOW_WIDTH / x, HEIGHT /
+        // y
+        int spaceX = WINDOW_WIDTH / x;
+        int spaceY = WINDOW_HEIGHT / y;
+
+        // divide each by 2 to get the center square for beginning node
+        double xPos = spaceX / 2;
+        double yPos = spaceY / 2;
+        // initial value saved so that can return to the proper xVal when
+        // changing y
+        double initX = xPos;
+
+        // store the coordinates of each user inside a hash map
+        HashMap<Person, double[]> coordMap = new HashMap<>();
+
+        // add the nodes
+        for (Person p : socialNetwork.allUsers()) {
+            // we have to fix our null pointers
+            if (p == null) {
+                continue;
+            }
+            drawNode(gc, p.getName(), xPos, yPos);
+            xPos += spaceX; // increment to middle of next area
+
+            if (xPos > WINDOW_WIDTH) {
+                xPos = initX; // reset x and increment y
+                yPos += spaceY;
+            }
+
+            double[] coords = {xPos, yPos};
+            coordMap.put(p, coords); // associate the coordinates with a person
+        }
+
+        // now add edges
+        // get all the friends of each person
+        for (Person p1 : socialNetwork.allUsers()) {
+            double[] p1Coords = coordMap.get(p1);
+            if (p1 == null) {
+                continue;
+            }
+            for (Person p2 : socialNetwork.getFriends(p1.getName())) {
+                if (p2 == null) {
+                    continue;
+                }
+                double[] p2Coords = coordMap.get(p2);
+                if (p2Coords == null) {
+                    continue;
+                }
+                drawEdge(gc, p1Coords[0], p1Coords[1], p2Coords[0],
+                        p2Coords[1]);
+            }
+        }
+    }
+
+    /**
+     * Drawing node
+     * 
+     * @param gc   to use
+     * @param name of node
+     * @param x    coordinate
+     * @param y    coordinate
+     */
+    private void drawNode(GraphicsContext gc, String name, double x, double y) {
+        gc.setFill(Color.RED);
+        gc.fillOval(x, y, 50, 50);
+        gc.setFill(Color.BLACK);
+        gc.strokeText(name, x, y);
+    }
+
+    /**
+     * Drawing edge
+     * 
+     * @param gc to use
+     * @param x1 coordinate
+     * @param y1 coordinate
+     * @param x2 coordinate (ending)
+     * @param y2 coordinate (ending)////
+     */
+    private void drawEdge(GraphicsContext gc, double x1, double y1, double x2,
+            double y2) {
+        gc.setFill(Color.BLACK);
+        gc.strokeLine(x1, y1, x2, y2);
+
+    }
+
+    /**
+     * Main method to launch
+     * 
+     * @param args
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
 
 }

@@ -233,6 +233,11 @@ public class Graph implements GraphADT {
 			Person current = tmp.get(0);
 			Set<Person> neighbors = this.getNeighbors(current);
 			
+//			if(neighbors == null) {
+//			    System.out.println("users not connected");
+//			    break;
+//			}
+			
 			//iterate through neighbors
 			for (Person neighbor : neighbors) {
 				String name = neighbor.getName();

@@ -203,6 +203,11 @@ public class SocialNetwork implements SocialNetworkADT {
 	public List<Person> getShortestPath(String user1, String user2) {
 		//get path of strings from graph
 		List<String> stringPath = this.graph.getShortestPath(user1, user2);
+		
+		if(stringPath == null) {
+		    return null;
+		}
+		
 		//List for Persons to be stored
 		List<Person> personPath = new LinkedList<>();
 		
