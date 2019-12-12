@@ -470,6 +470,7 @@ public class Main extends Application {
         Button reset = new Button("Reset Network"); // add functionality
         reset.setOnAction(e -> {
             this.socialNetwork.resetNetwork();
+            this.totalFriendships = 0;
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setContentText("Social Network has been reset, "
                     + "all users and friend connections have been removed.");
