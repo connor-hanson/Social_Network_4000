@@ -971,7 +971,6 @@ public class Main extends Application {
 		bp.getChildren().add(canvas);
 		bp.setBottom(backButton);
 		stage.setScene(graphScene);
-		System.out.println("Done");
 
 		return canvas;
 	}
